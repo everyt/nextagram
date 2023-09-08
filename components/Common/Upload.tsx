@@ -1,15 +1,13 @@
-type divProps = {
-  children: React.ReactNode;
-  className: string;
-  handleDropFile: (ev: React.DragEvent<HTMLDivElement>) => void;
-  handleDragOver: (ev: React.DragEvent<HTMLDivElement>) => void;
-  handleClose: () => void;
-};
-
 type inputProps = {
   children: React.ReactNode;
   className: string;
-  handleInputFile: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInputFile?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+type divProps = inputProps & {
+  handleDropFile: (ev: React.DragEvent<HTMLDivElement>) => void;
+  handleDragOver: (ev: React.DragEvent<HTMLDivElement>) => void;
+  handleClose: () => void;
 };
 
 const div = ({
