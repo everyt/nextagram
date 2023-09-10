@@ -5,18 +5,27 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
     "paths": {
+      "Skeleton/*": ["./components/Skeleton/*"],
+      "Semantic/*": ["./components/Semantic/*"],
+      "Modal/*": ["./components/Modal/*"],
+      "Lib/*": ["./lib/*"],
+      "Utils/*": ["./lib/utils/*"],
+      "Components/*": ["./components/*"],
+      "Styles/*": ["./styles/*"],
+      "Hooks/*": ["./hooks/*"],
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tailwind.config.js"],
   "exclude": ["node_modules"]
 }

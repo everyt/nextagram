@@ -1,9 +1,6 @@
-import { useCallback, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useSelectedFile } from '@/hooks/useSelectedFile';
-import { Upload } from '@/components/Common/Upload';
-
-import { firebaseStorage, firestore } from '@/lib/firebase';
+import { upload } from 'Components/Common/Upload';
+import { useSelectedFile } from 'Hooks/useSelectedFile';
+import { allowScroll, preventScroll } from 'Lib/utils/modal';
 import {
   Timestamp,
   addDoc,
@@ -12,25 +9,48 @@ import {
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
+// import { firebaseStorage, firestore } from '@/lib/firebase';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 
-export default function WriteFeedModal() {
+import { useCallback, useEffect, useState } from 'react';
+
+import { useSession } from 'next-auth/react';
+
+type ModalType = {
+  handleClose: () => void;
+};
+
+export default function WriteFeedModal({ handleClose }: ModalType) {
+  const ALLOWED_IMAGEEXTENSION = ['PNG', 'JPG', 'JPEG', 'WEBP', 'AVIF', 'GIF'];
   const {
     selectedFile,
-    setSelectedFile,
-    onInputSelectedFile,
-    onDropSelectedFile,
-    onDragOver,
-  } = useSelectedFile(['PNG', 'JPG']);
+    handleInputSelectedFile,
+    handleDropSelectedFile,
+    handleDragOver,
+    handleResetSelectedFile,
+  } = useSelectedFile(ALLOWED_IMAGEEXTENSION);
+
+  useEffect(() => {
+    const prevScrollY = preventScroll();
+    return () => {
+      allowScroll(prevScrollY);
+    };
+  }, []);
 
   return (
-    <Upload.div
-      className=''
-      handleDropFile={onDropSelectedFile}
-      handleDragOver={onDragOver}
-      handleClose={}
+    <upload.div
+      className='w-[400px] h-[600px]'
+      handleDropFile={handleDropSelectedFile}
+      handleDragOver={handleDragOver}
+      handleClose={handleClose}
     >
-      <div></div>
-    </Upload.div>
+      <div />
+      <upload.input
+        className='rounded-3xl'
+        handleInputFile={handleInputSelectedFile}
+      >
+        공유하기
+      </upload.input>
+    </upload.div>
   );
 }

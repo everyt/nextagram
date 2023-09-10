@@ -1,10 +1,12 @@
 type inputProps = {
   children: React.ReactNode;
   className: string;
-  handleInputFile?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInputFile: (ev: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-type divProps = inputProps & {
+type divProps = {
+  children: React.ReactNode;
+  className: string;
   handleDropFile: (ev: React.DragEvent<HTMLDivElement>) => void;
   handleDragOver: (ev: React.DragEvent<HTMLDivElement>) => void;
   handleClose: () => void;
@@ -39,10 +41,7 @@ const input = ({ children, className, handleInputFile }: inputProps) => {
         className='hidden'
         onChange={handleInputFile}
       />
-      <label
-        htmlFor='input_file'
-        className={className}
-      >
+      <label htmlFor='input_file' className={className}>
         {children}
       </label>
     </>
@@ -50,13 +49,13 @@ const input = ({ children, className, handleInputFile }: inputProps) => {
 };
 type inputType = { input: typeof input };
 
-export const Upload: divType & inputType = ({
+export const upload: divType & inputType = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  return <>{children}</>;
+  return { children };
 };
 
-Upload.div = div;
-Upload.input = input;
+upload.div = div;
+upload.input = input;
