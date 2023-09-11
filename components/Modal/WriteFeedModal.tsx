@@ -44,7 +44,6 @@ export default function WriteFeedModal({ handleClose }: ModalType) {
       handleDragOver={handleDragOver}
       handleClose={handleClose}
     >
-      <div />
       <upload.input
         className='rounded-3xl'
         handleInputFile={handleInputSelectedFile}
