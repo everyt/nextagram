@@ -15,14 +15,6 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "Skeleton/*": ["./components/Skeleton/*"],
-      "Bar/*": ["./components/Bar/*"],
-      "Modal/*": ["./components/Modal/*"],
-      "Lib/*": ["./lib/*"],
-      "Utils/*": ["./lib/utils/*"],
-      "Components/*": ["./components/*"],
-      "Styles/*": ["./styles/*"],
-      "Hooks/*": ["./hooks/*"],
       "@/*": ["./*"]
     }
   },

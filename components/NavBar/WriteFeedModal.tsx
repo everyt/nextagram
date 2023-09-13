@@ -11,14 +11,12 @@ import { useEffect, useState } from 'react';
 
 import { useSession } from 'next-auth/react';
 
-import { firebaseStorage, firestore } from 'Lib/firebase';
-import { allowScroll, preventScroll } from 'Lib/utils/modal';
-
-import { useSelectedFile } from 'Hooks/useSelectedFile';
-
-import Modal from 'Components/Common/Modal';
-import Textarea from 'Components/Common/Textarea';
-import upload from 'Components/Common/Upload';
+import Modal from '@/components/Common/Modal';
+import Textarea from '@/components/Common/Textarea';
+import upload from '@/components/Common/Upload';
+import { useSelectedFile } from '@/hooks/useSelectedFile';
+import { firebaseStorage, firestore } from '@/lib/firebase';
+import { allowScroll, preventScroll } from '@/lib/utils/modal';
 
 type WFModalProps = {
   boolean: boolean;

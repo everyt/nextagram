@@ -4,14 +4,10 @@ import { motion } from 'framer-motion';
 
 import { useEffect, useState } from 'react';
 
-import Image from 'next/image';
-
 import { signOut } from 'next-auth/react';
 
-import { useModal } from 'Hooks/useModal';
-import useWindowSize from 'Hooks/useWindowSize';
-
-import WriteFeedModal from 'Modal/WriteFeedModal';
+import WriteFeedModal from '@/components/NavBar/WriteFeedModal';
+import useWindowSize from '@/hooks/useWindowSize';
 
 // TODO: 반응형 웹으로 구성할 때,
 // 폰 화면은 ~768px, 태블릿은 ~1024px, 데스크탑은 1024~px라고 하네
@@ -31,7 +27,7 @@ import WriteFeedModal from 'Modal/WriteFeedModal';
 // 인풋은 밸류를 주기 위해서 필요해.
 // 코드를 깔끔하게 유지하기 위해서 버튼 12개를 컴포넌트로 관리할 수 있을까?
 
-export default function Navbar() {
+export default function NavBar() {
   const size = useWindowSize().width / 9;
   const [width, setWidth] = useState<number>(200);
   const [onlyIcon, setOnlyIcon] = useState<boolean>(false);
