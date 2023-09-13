@@ -1,21 +1,17 @@
-'use client';
-
-import { useState } from 'react';
+import { TextareaHTMLAttributes, useState } from 'react';
 
 type Props = {
-  type?: string;
   className?: string;
   placeholder?: string;
   onChange: ({ value }: { value: string }) => void;
   onFocus?: () => void;
   onBlur?: () => void;
-  onKeyDown?: (ev: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: (ev: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   value?: string;
   disabled?: boolean;
 };
 
-export default function Input({
-  type = 'text',
+export default function Textarea({
   className,
   placeholder,
   onChange,
@@ -27,15 +23,14 @@ export default function Input({
 }: Props) {
   const [text, setText] = useState(value);
 
-  const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = ev.target; // const value = ev.target.value;
+  const handleChange = (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = ev.target;
     setText(value);
     onChange({ value });
   };
 
   return (
-    <input
-      type={type}
+    <textarea
       value={text}
       className={className}
       placeholder={placeholder}

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .navbar-button {
+    @apply flex content-center rounded-lg p-2 hover:bg-stone-100;
+  }
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -15,9 +21,13 @@
     --background-end-rgb: 0, 0, 0;
   }
 } */
-//background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+//background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(var(--background-end-rgb))
+  )
+  rgb(var(--background-start-rgb));
 //color: rgb(var(--foreground-rgb));
 
 body {
-  -webkit-transform: translateZ(0);
 }

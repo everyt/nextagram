@@ -15,7 +15,9 @@ module.exports = {
     "es6": true
   },
   "ignorePatterns": [
-    "node_modules/"
+    "node_modules/",
+    ".*.js",
+    "*.config.*"
   ],
   "extends": [
     "airbnb",
@@ -56,6 +58,13 @@ module.exports = {
     "react/button-has-type": 0,
     "no-irregular-whitespace": 0,
     "global-require": 0,
-    "import/no-extraneous-dependencies": 0
+    "import/no-extraneous-dependencies": 0,
+    "react/jsx-no-useless-fragment": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "no-param-reassign": 0,
+    "@typescript-eslint/no-shadow": 0,
+    "react/require-default-props": 0,
+    "react/jsx-props-no-spreading": 0,
+    "consistent-return": 0
   }
 }

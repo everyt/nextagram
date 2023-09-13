@@ -9,7 +9,6 @@ type divProps = {
   className: string;
   handleDropFile: (ev: React.DragEvent<HTMLDivElement>) => void;
   handleDragOver: (ev: React.DragEvent<HTMLDivElement>) => void;
-  handleClose: () => void;
 };
 
 const div = ({
@@ -17,14 +16,12 @@ const div = ({
   className,
   handleDropFile,
   handleDragOver,
-  handleClose,
 }: divProps) => {
   return (
     <div
       className={className}
       onDrop={handleDropFile}
       onDragOver={handleDragOver}
-      onClick={handleClose}
     >
       {children}
     </div>
@@ -49,7 +46,7 @@ const input = ({ children, className, handleInputFile }: inputProps) => {
 };
 type inputType = { input: typeof input };
 
-export const upload: divType & inputType = ({
+const upload: divType & inputType = ({
   children,
 }: {
   children: React.ReactNode;
@@ -59,3 +56,5 @@ export const upload: divType & inputType = ({
 
 upload.div = div;
 upload.input = input;
+
+export default upload;

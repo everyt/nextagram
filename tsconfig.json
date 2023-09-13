@@ -16,7 +16,7 @@
     "incremental": true,
     "paths": {
       "Skeleton/*": ["./components/Skeleton/*"],
-      "Semantic/*": ["./components/Semantic/*"],
+      "Bar/*": ["./components/Bar/*"],
       "Modal/*": ["./components/Modal/*"],
       "Lib/*": ["./lib/*"],
       "Utils/*": ["./lib/utils/*"],
