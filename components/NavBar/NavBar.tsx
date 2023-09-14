@@ -38,12 +38,14 @@ export default function NavBar() {
   const [showOnlyIcon, setShowOnlyIcon] = useState<boolean>(false);
 
   useEffect(() => {
-    if (showOnlyIcon === false) setWidth(size);
-    if (size < 182) {
-      setWidth(85);
-      setShowOnlyIcon(true);
-    } else {
-      setShowOnlyIcon(false);
+    if (!typeof window === undefined) {
+      if (showOnlyIcon === false) setWidth(size);
+      if (size < 182) {
+        setWidth(85);
+        setShowOnlyIcon(true);
+      } else {
+        setShowOnlyIcon(false);
+      }
     }
   }, [size]);
 

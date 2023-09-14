@@ -65,6 +65,7 @@ module.exports = {
     "@typescript-eslint/no-shadow": 0,
     "react/require-default-props": 0,
     "react/jsx-props-no-spreading": 0,
-    "consistent-return": 0
+    "consistent-return": 0,
+    "no-constant-condition": 0
   }
 }
