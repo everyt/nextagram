@@ -14,6 +14,7 @@ module.exports = {
       spacing: {
         18: '4.5rem',
         50: '12.5rem',
+        inherit: 'inherit',
       },
     },
   },

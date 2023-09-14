@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 
+/**
+ * `useWindowSize()는 클라이언트상에서
+ * {width: number, height: number}로 값을 return합니다.
+ */
 export default function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/

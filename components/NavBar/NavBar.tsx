@@ -4,8 +4,11 @@ import { motion } from 'framer-motion';
 
 import { useEffect, useState } from 'react';
 
+import Image from 'next/image';
+
 import { signOut } from 'next-auth/react';
 
+import NavBarButton from '@/components/NavBar/NavBarButton';
 import WriteFeedModal from '@/components/NavBar/WriteFeedModal';
 import useWindowSize from '@/hooks/useWindowSize';
 
@@ -28,28 +31,34 @@ import useWindowSize from '@/hooks/useWindowSize';
 // 코드를 깔끔하게 유지하기 위해서 버튼 12개를 컴포넌트로 관리할 수 있을까?
 
 export default function NavBar() {
-  const size = useWindowSize().width / 9;
-  const [width, setWidth] = useState<number>(200);
-  const [onlyIcon, setOnlyIcon] = useState<boolean>(false);
+  const size = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
+  const [width, setWidth] = useState<number>(182);
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [showOnlyIcon, setShowOnlyIcon] = useState<boolean>(false);
 
   useEffect(() => {
-    onlyIcon === false && setWidth(size);
+    if (showOnlyIcon === false) setWidth(size);
+    if (size < 182) {
+      setWidth(85);
+      setShowOnlyIcon(true);
+    } else {
+      setShowOnlyIcon(false);
+    }
   }, [size]);
 
-  const handleClickButton = (ev: React.MouseEvent<HTMLElement>) => {
+  const handleClickButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    width === size ? setWidth(70) : setWidth(size);
-    setOnlyIcon((prev) => !prev);
+    width === size ? setWidth(85) : setWidth(size);
+    setShowOnlyIcon((prev) => !prev);
   };
 
-  const handleOpenModal = (ev: React.MouseEvent<HTMLElement>) => {
+  const handleOpenModal = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    setOpen(true);
+    setOpenModal(true);
   };
 
-  const handleLogout = (ev: React.MouseEvent<HTMLElement>) => {
+  const handleLogout = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     signOut();
   };
@@ -57,48 +66,99 @@ export default function NavBar() {
   return (
     <>
       <motion.nav
-        className='fixed z-0 h-screen w-18 bg-white pr-1 sm:w-50 lg:w-56'
+        className='1h-screen fixed z-40 w-[182px] bg-white pr-1'
         animate={{ width }}
-        transition={{ ease: 'easeInOut', duration: 0.6 }}
+        transition={{ ease: 'easeInOut', duration: 0.4 }}
       >
-        <section className='h-screen border-r-[1px]'>
-          <article>
-            <button onClick={handleClickButton} className='navbar-button'>
-              홈
-            </button>
-            <button onClick={handleClickButton} className='navbar-button'>
-              검색
-            </button>
-            <button onClick={handleClickButton} className='navbar-button'>
-              탐색 탭
-            </button>
-            <button onClick={handleClickButton} className='navbar-button'>
-              릴스
-            </button>
-            <button onClick={handleClickButton} className='navbar-button'>
-              메시지
-            </button>
-            <button onClick={handleClickButton} className='navbar-button'>
-              알림
-            </button>
-            <button onClick={handleOpenModal} className='navbar-button'>
-              만들기
-            </button>
-            <button onClick={handleClickButton} className='navbar-button'>
-              프로필
-            </button>
-          </article>
-          <article>
-            <ul>
-              <li>
-                <button onClick={handleLogout}>로그아웃</button>
-              </li>
-            </ul>
-            <button onClick={handleClickButton}>더 보기</button>
-          </article>
-        </section>
+        <div className='border-r-[1px] border-stone-200'>
+          <section className='flex h-screen flex-col justify-start p-3 pr-7'>
+            <Image
+              className={
+                showOnlyIcon
+                  ? 'mb-4 ml-2 mr-3 mt-3 h-12 w-24 pt-3'
+                  : 'mb-3 ml-2 mr-3 h-16 w-32 pt-3'
+              }
+              src={
+                showOnlyIcon
+                  ? '/svg/Instagram-black-icon.svg'
+                  : '/svg/Instagram-text.svg'
+              }
+              alt='Instagram'
+              height={100}
+              width={200}
+            />
+            <article>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                홈
+              </NavBarButton>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                검색
+              </NavBarButton>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                탐색 탭
+              </NavBarButton>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                릴스
+              </NavBarButton>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                메시지
+              </NavBarButton>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                알림
+              </NavBarButton>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleOpenModal}
+              >
+                만들기
+              </NavBarButton>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                프로필
+              </NavBarButton>
+            </article>
+            <article>
+              <ul>
+                <li>
+                  <NavBarButton
+                    showOnlyIcon={showOnlyIcon}
+                    onClick={handleLogout}
+                  >
+                    로그아웃
+                  </NavBarButton>
+                </li>
+              </ul>
+              <NavBarButton
+                showOnlyIcon={showOnlyIcon}
+                onClick={handleClickButton}
+              >
+                더 보기
+              </NavBarButton>
+            </article>
+          </section>
+        </div>
       </motion.nav>
-      <WriteFeedModal boolean={open} setBoolean={setOpen} />
+      <WriteFeedModal boolean={openModal} setBoolean={setOpenModal} />
     </>
   );
 }
