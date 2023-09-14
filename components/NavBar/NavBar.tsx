@@ -1,160 +1,147 @@
 'use client';
 
+import { Icon } from '@iconify-icon/react';
 import { motion } from 'framer-motion';
 
 import { useEffect, useState } from 'react';
 
-import Image from 'next/image';
-
-import { signOut } from 'next-auth/react';
-
-import NavBarButton from '@/components/NavBar/NavBarButton';
-import WriteFeedModal from '@/components/NavBar/WriteFeedModal';
 import useWindowSize from '@/hooks/useWindowSize';
 
-// TODO: 반응형 웹으로 구성할 때,
-// 폰 화면은 ~768px, 태블릿은 ~1024px, 데스크탑은 1024~px라고 하네
+import DropDown from './DropDown';
+import NavBarButton from './NavBarButton';
+import WriteFeedModal from './WriteFeedModal';
 
-// ~1024px, 네비바가 작아지고 푸터바가 사라져
-
-// 즉 ~768px일때 네비바와 푸터바가 상하단에 위치해야 해
-// 이건 tailwind css를 어떻게 다르게 써야 할 텐데
-// w-18 sm:w-50 lg:w-56' 이런 느낌으로
-
-// 기본 폰트 사이즈를 10pt로 주고 rem을 계산하면 쉬울 것 같네
-
-// 필요한 버튼은 10개, 다크모드는 색깔만 전환하면 되니까 11개?
-// 설정까지 12개?
-
-// 그럼 음. 링크 버튼이 아닌 경우엔 굳이 컴포넌트로 뺄 필요가 있나?
-// 인풋은 밸류를 주기 위해서 필요해.
-// 코드를 깔끔하게 유지하기 위해서 버튼 12개를 컴포넌트로 관리할 수 있을까?
+const Icons = [
+  ['mingcute:home-4-line', 'mingcute:home-4-fill'],
+  ['mdi:compass-outline', 'eos-icons:compass'],
+  ['iconamoon:search', 'iconamoon:search-bold'],
+  [
+    'solar:video-frame-play-horizontal-outline',
+    'solar:video-frame-play-horizontal-bold',
+  ],
+  ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
+  ['ion:heart-outline', 'ion:heart'],
+  ['jam:write', 'jam:write-f'],
+  ['iconamoon:profile-circle-light', 'iconamoon:profile-circle-fill'],
+  ['ph:list', 'ph:list-bold'],
+];
 
 export default function NavBar() {
   const size = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
   const [width, setWidth] = useState<number>(182);
+  const [dropdownWidth, setDropdownWidth] = useState<number>(140);
+
+  const [highlight, setHighlight] = useState<number>(0);
 
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openDropDown, setOpenDropDown] = useState<boolean>(false);
   const [showOnlyIcon, setShowOnlyIcon] = useState<boolean>(false);
+  const [isUnderMinWidth, setIsUnderMinWidth] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!typeof window === undefined) {
-      if (showOnlyIcon === false) setWidth(size);
-      if (size < 182) {
-        setWidth(85);
-        setShowOnlyIcon(true);
-      } else {
-        setShowOnlyIcon(false);
-      }
+    if (showOnlyIcon === false && size < 240) {
+      setWidth(size);
+      setDropdownWidth(size - 42);
+    }
+    if (size < 182) {
+      setWidth(75);
+      setDropdownWidth(45);
+      setShowOnlyIcon(true);
+      setIsUnderMinWidth(true);
+    } else {
+      setShowOnlyIcon(false);
+      setIsUnderMinWidth(false);
     }
   }, [size]);
 
-  const handleClickButton = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    ev.preventDefault();
-    width === size ? setWidth(85) : setWidth(size);
-    setShowOnlyIcon((prev) => !prev);
+  const handleClickButton = () => {
+    if (!isUnderMinWidth) {
+      setWidth(width === 75 ? size : 75);
+      setDropdownWidth(dropdownWidth === 45 ? size - 42 : 45);
+      setShowOnlyIcon((prev) => !prev);
+    } else {
+      setWidth(width === 75 ? 182 : 75);
+      setDropdownWidth(dropdownWidth === 45 ? 140 : 45);
+      setShowOnlyIcon((prev) => !prev);
+    }
   };
 
-  const handleOpenModal = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    ev.preventDefault();
+  const handleOpenModal = () => {
     setOpenModal(true);
   };
 
-  const handleLogout = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    ev.preventDefault();
-    signOut();
+  const handleOpenDropDown = () => {
+    setOpenDropDown((prev) => !prev);
+  };
+
+  const variants = {
+    hide: { opacity: [1], scale: [0, 1] },
+    show: { opacity: [0, 1], scale: [1] },
   };
 
   return (
     <>
       <motion.nav
-        className='1h-screen fixed z-40 w-[182px] bg-white pr-1'
+        className='fixed z-40 h-screen w-[182px] bg-white pr-1'
         animate={{ width }}
-        transition={{ ease: 'easeInOut', duration: 0.4 }}
+        transition={{ ease: 'easeInOut', duration: 0.35 }}
       >
         <div className='border-r-[1px] border-stone-200'>
-          <section className='flex h-screen flex-col justify-start p-3 pr-7'>
-            <Image
-              className={
-                showOnlyIcon
-                  ? 'mb-4 ml-2 mr-3 mt-3 h-12 w-24 pt-3'
-                  : 'mb-3 ml-2 mr-3 h-16 w-32 pt-3'
-              }
-              src={
-                showOnlyIcon
-                  ? '/svg/Instagram-black-icon.svg'
-                  : '/svg/Instagram-text.svg'
-              }
+          <section className='flex h-screen flex-col py-2 pl-1 pr-5'>
+            <motion.img
+              className={`fixed ml-3 mr-3 pt-3 ${
+                showOnlyIcon ? 'mb-4 mt-3 h-12 w-10' : 'mb-3 h-16 w-36'
+              }`}
+              src={`/svg/Instagram-${showOnlyIcon ? 'black-icon' : 'text'}.svg`}
               alt='Instagram'
               height={100}
-              width={200}
+              width={280}
+              animate={showOnlyIcon ? 'hide' : 'show'}
+              variants={variants}
+              transition={{ ease: 'easeInOut', duration: 0.4 }}
             />
-            <article>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
-              >
-                홈
-              </NavBarButton>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
-              >
-                검색
-              </NavBarButton>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
-              >
-                탐색 탭
-              </NavBarButton>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
-              >
-                릴스
-              </NavBarButton>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
-              >
-                메시지
-              </NavBarButton>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
-              >
-                알림
-              </NavBarButton>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleOpenModal}
-              >
-                만들기
-              </NavBarButton>
-              <NavBarButton
-                showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
-              >
-                프로필
-              </NavBarButton>
+            <article className='mt-20'>
+              {[
+                [0, '/', '홈'],
+                [1, handleClickButton, '검색'],
+                [2, '/explore', '탐색 탭'],
+                [3, '/reels', '릴스'],
+                [4, '/messages', '메시지'],
+                [5, handleClickButton, '알림'],
+                [6, handleOpenModal, '만들기'],
+                [7, '/profile', '프로필'],
+              ].map(([key, onClick, text]) => (
+                <NavBarButton
+                  index={key as number}
+                  highlight={highlight}
+                  setHighlight={setHighlight}
+                  showOnlyIcon={showOnlyIcon}
+                  onClick={onClick as string | (() => void)}
+                  text={text as string}
+                >
+                  <Icon
+                    icon={`${Icons[key as number][highlight === key ? 1 : 0]}`}
+                    style={{ fontSize: '30px' }}
+                  />
+                </NavBarButton>
+              ))}
             </article>
             <article>
-              <ul>
-                <li>
-                  <NavBarButton
-                    showOnlyIcon={showOnlyIcon}
-                    onClick={handleLogout}
-                  >
-                    로그아웃
-                  </NavBarButton>
-                </li>
-              </ul>
+              {openDropDown && <DropDown showOnlyIcon={showOnlyIcon} />}
               <NavBarButton
+                index={8}
+                highlight={highlight}
+                setHighlight={setHighlight}
                 showOnlyIcon={showOnlyIcon}
-                onClick={handleClickButton}
+                className='absolute bottom-6'
+                style={{ width: `${dropdownWidth}px` }}
+                onClick={handleOpenDropDown}
+                text='더 보기'
               >
-                더 보기
+                <Icon
+                  icon={`${Icons[8][highlight === 8 ? 1 : 0]}`}
+                  style={{ fontSize: '30px' }}
+                />
               </NavBarButton>
             </article>
           </section>

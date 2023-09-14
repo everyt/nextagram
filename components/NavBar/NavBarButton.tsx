@@ -2,10 +2,18 @@
 
 import { motion } from 'framer-motion';
 
+import { useRouter } from 'next/navigation';
+
 type Props = {
+  index: number;
   children: React.ReactNode;
+  text: string;
+  className?: string;
+  style?: React.CSSProperties;
+  highlight: number;
+  setHighlight: React.Dispatch<React.SetStateAction<number>>;
   showOnlyIcon: boolean;
-  onClick: (ev: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: string | (() => void);
 };
 
 const variants = {
@@ -14,21 +22,40 @@ const variants = {
 };
 
 export default function NavBarButton({
+  index,
   children,
+  text,
+  className,
+  style,
+  highlight,
+  setHighlight,
   showOnlyIcon,
   onClick,
 }: Props) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    typeof onClick === 'string' ? router.push(onClick!) : onClick!();
+    setHighlight(
+      !(typeof onClick === 'string') && index === highlight ? 0 : index!,
+    );
+  };
+
   return (
     <button
-      onClick={onClick}
-      className='mx-2 mb-2 flex w-full content-center whitespace-nowrap rounded-lg p-2 hover:bg-stone-100'
+      key={index}
+      onClick={handleClick}
+      className={`mx-2 mb-2 flex w-full content-center whitespace-nowrap rounded-lg p-2 hover:bg-stone-100 ${className}`}
+      style={style}
     >
+      {children}
       <motion.p
+        className='ml-3 mt-1'
         animate={showOnlyIcon ? 'hide' : 'show'}
         variants={variants}
-        transition={{ ease: 'easeInOut', duration: 0.8 }}
+        transition={{ ease: 'easeInOut', duration: 0.5 }}
       >
-        {children}
+        {text}
       </motion.p>
     </button>
   );
