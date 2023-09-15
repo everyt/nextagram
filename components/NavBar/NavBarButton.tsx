@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 
+import { memo } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 type Props = {
@@ -21,7 +23,7 @@ const variants = {
   show: { opacity: [0, 0, 0.1, 0.5, 1] },
 };
 
-export default function NavBarButton({
+function NavBarButton({
   index,
   children,
   text,
@@ -57,3 +59,5 @@ export default function NavBarButton({
     </button>
   );
 }
+
+export default memo(NavBarButton);

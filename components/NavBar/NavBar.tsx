@@ -3,7 +3,7 @@
 import { Icon } from '@iconify-icon/react';
 import { motion } from 'framer-motion';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import useWindowSize from '@/hooks/useWindowSize';
 
@@ -11,17 +11,28 @@ import DropDown from './DropDown';
 import NavBarButton from './NavBarButton';
 import WriteFeedModal from './WriteFeedModal';
 
-const Icons = [
-  ['mingcute:home-4-line', 'mingcute:home-4-fill'],
-  ['mdi:compass-outline', 'eos-icons:compass'],
-  ['iconamoon:search', 'iconamoon:search-bold'],
-  ['solar:video-frame-play-horizontal-outline', 'solar:video-frame-play-horizontal-bold'],
-  ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
-  ['ion:heart-outline', 'ion:heart'],
-  ['jam:write', 'jam:write-f'],
-  ['iconamoon:profile-circle-light', 'iconamoon:profile-circle-fill'],
-  ['ph:list', 'ph:list-bold'],
-];
+const Icons = useMemo(
+  () => [
+    ['mingcute:home-4-line', 'mingcute:home-4-fill'],
+    ['mdi:compass-outline', 'eos-icons:compass'],
+    ['iconamoon:search', 'iconamoon:search-bold'],
+    ['solar:video-frame-play-horizontal-outline', 'solar:video-frame-play-horizontal-bold'],
+    ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
+    ['ion:heart-outline', 'ion:heart'],
+    ['jam:write', 'jam:write-f'],
+    ['iconamoon:profile-circle-light', 'iconamoon:profile-circle-fill'],
+    ['ph:list', 'ph:list-bold'],
+  ],
+  [],
+);
+
+const variants = useMemo(
+  () => ({
+    hide: { opacity: [1], scale: [0, 1] },
+    show: { opacity: [0, 1], scale: [1] },
+  }),
+  [],
+);
 
 export default function NavBar() {
   const windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
@@ -37,34 +48,20 @@ export default function NavBar() {
   const [sizeUnderMinWidth, setSizeUnderMinWidth] = useState<boolean>(false);
 
   useEffect(() => {
-    if (showOnlyIcon === false && windowSize < 240) {
-      setWidth(windowSize);
-      setDropdownWidth(windowSize - 42);
-    }
-    if (windowSize < 182) {
-      setWidth(75);
-      setDropdownWidth(45);
-      setNavBarMargin(85);
-      setShowOnlyIcon(true);
-      setSizeUnderMinWidth(true);
-    } else {
-      setNavBarMargin(300);
-      setShowOnlyIcon(false);
-      setSizeUnderMinWidth(false);
-    }
+    setWidth(windowSize < 182 ? 75 : windowSize);
+    setNavBarMargin(windowSize < 182 ? 85 : 300);
+    setDropdownWidth(windowSize < 182 ? windowSize - 42 : windowSize - 42);
+
+    setShowOnlyIcon(windowSize < 182);
+    setSizeUnderMinWidth(windowSize < 182);
   }, [windowSize]);
 
   const handleClickButton = () => {
+    setWidth(width === 75 ? (!sizeUnderMinWidth ? windowSize : 182) : 75);
     setNavBarMargin(85 ? 300 : 85);
-    if (!sizeUnderMinWidth) {
-      setWidth(width === 75 ? windowSize : 75);
-      setDropdownWidth(dropdownWidth === 45 ? windowSize - 42 : 45);
-      setShowOnlyIcon((prev) => !prev);
-    } else {
-      setWidth(width === 75 ? 182 : 75);
-      setDropdownWidth(dropdownWidth === 45 ? 140 : 45);
-      setShowOnlyIcon((prev) => !prev);
-    }
+    setDropdownWidth(dropdownWidth === 45 ? (!sizeUnderMinWidth ? windowSize - 42 : 140) : 45);
+
+    setShowOnlyIcon((prev) => !prev);
   };
 
   const handleOpenModal = () => {
@@ -73,11 +70,6 @@ export default function NavBar() {
 
   const handleOpenDropDown = () => {
     setOpenDropDown((prev) => !prev);
-  };
-
-  const variants = {
-    hide: { opacity: [1], scale: [0, 1] },
-    show: { opacity: [0, 1], scale: [1] },
   };
 
   return (
