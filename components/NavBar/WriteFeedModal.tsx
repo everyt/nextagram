@@ -37,7 +37,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [isShowSyncStatus, setIsShowSyncStatus] = useState<boolean>(false);
 
-  const [caption, setCaption] = useState<string>('');
+  const [feedCaption, setFeedCaption] = useState<string>('');
 
   const ALLOWED_IMAGEEXTENSION = ['PNG', 'JPG', 'JPEG', 'WEBP', 'AVIF', 'GIF'];
   const {
@@ -74,7 +74,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
         userEmail: session?.user.email,
         userName: session?.user.name,
         userImg: session?.user.image,
-        caption,
+        feedCaption,
         timestamp: serverTimestamp(),
       };
       const feedRef = await addDoc(collectionRef, feedData);
@@ -85,7 +85,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
           async () => {
             const imageDownloadUrl = await getDownloadURL(imageRef);
             await updateDoc(doc(firestore, 'feeds', feedRef.id!), {
-              image: imageDownloadUrl,
+              feedImg: imageDownloadUrl,
             });
           },
         );
@@ -98,14 +98,14 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
     }
 
     handleResetSelectedFile();
-    setCaption('');
+    setFeedCaption('');
     setIsSyncing(false);
     if (syncStatus !== 0) setIsShowSyncStatus(true); // 모달창을 끌 때 초기화해줘야 함
     if (!isShowSyncStatus) setCloseModal();
   };
 
   const handleChange = ({ value }: { value: string }) => {
-    setCaption(value);
+    setFeedCaption(value);
   };
 
   const syncStatusMessage = syncStatusDescript[syncStatus];

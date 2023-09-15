@@ -66,6 +66,8 @@ module.exports = {
     "react/require-default-props": 0,
     "react/jsx-props-no-spreading": 0,
     "consistent-return": 0,
-    "no-constant-condition": 0
+    "no-constant-condition": 0,
+    "react/no-array-index-key": 0,
+    "no-console": 0
   }
 }

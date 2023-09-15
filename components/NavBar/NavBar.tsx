@@ -15,10 +15,7 @@ const Icons = [
   ['mingcute:home-4-line', 'mingcute:home-4-fill'],
   ['mdi:compass-outline', 'eos-icons:compass'],
   ['iconamoon:search', 'iconamoon:search-bold'],
-  [
-    'solar:video-frame-play-horizontal-outline',
-    'solar:video-frame-play-horizontal-bold',
-  ],
+  ['solar:video-frame-play-horizontal-outline', 'solar:video-frame-play-horizontal-bold'],
   ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
   ['ion:heart-outline', 'ion:heart'],
   ['jam:write', 'jam:write-f'],
@@ -88,18 +85,20 @@ export default function NavBar() {
       >
         <div className='border-r-[1px] border-stone-200'>
           <section className='flex h-screen flex-col py-2 pl-1 pr-5'>
-            <motion.img
-              className={`fixed ml-3 mr-3 pt-3 ${
-                showOnlyIcon ? 'mb-4 mt-3 h-12 w-10' : 'mb-3 h-16 w-36'
-              }`}
-              src={`/svg/Instagram-${showOnlyIcon ? 'black-icon' : 'text'}.svg`}
-              alt='Instagram'
-              height={100}
-              width={280}
-              animate={showOnlyIcon ? 'hide' : 'show'}
-              variants={variants}
-              transition={{ ease: 'easeInOut', duration: 0.4 }}
-            />
+            <article>
+              <motion.img
+                className={`fixed ml-3 mr-3 pt-3 ${
+                  showOnlyIcon ? 'mb-4 mt-3 h-12 w-10' : 'mb-3 h-16 w-36'
+                }`}
+                src={`/svg/Instagram-${showOnlyIcon ? 'black-icon' : 'text'}.svg`}
+                alt='Instagram'
+                height={100}
+                width={280}
+                animate={showOnlyIcon ? 'hide' : 'show'}
+                variants={variants}
+                transition={{ ease: 'easeInOut', duration: 0.4 }}
+              />
+            </article>
 
             <article className='mt-20'>
               {[
