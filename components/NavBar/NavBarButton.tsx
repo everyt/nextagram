@@ -36,14 +36,11 @@ export default function NavBarButton({
 
   const handleClick = () => {
     typeof onClick === 'string' ? router.push(onClick!) : onClick!();
-    setHighlight(
-      !(typeof onClick === 'string') && index === highlight ? 0 : index!,
-    );
+    setHighlight(!(typeof onClick === 'string') && index === highlight ? 0 : index!);
   };
 
   return (
     <button
-      key={index}
       onClick={handleClick}
       className={`mx-2 mb-2 flex w-full content-center whitespace-nowrap rounded-lg p-2 hover:bg-stone-100 ${className}`}
       style={style}

@@ -21,7 +21,42 @@ export default function FeedView() {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const fetchPosts = async () => {
+  const fetchFirstFeed = async () => {
+    try {
+      setLoading(true);
+
+      const q = query(
+        collection(firestore, 'posts'),
+        orderBy('timestamp', 'desc'),
+        limit(5), // 첫 번째 페이지의 경우 startAfter 없이 limit만 사용
+      );
+
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          if (querySnapshot.empty) {
+            setHasMore(false);
+          } else {
+            const newFeeds = querySnapshot.docs.map((doc) => doc.data());
+            setFeeds(newFeeds);
+          }
+        },
+        (error) => {
+          console.error(error);
+        },
+      );
+
+      return () => {
+        unsubscribe();
+      };
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFeeds = async () => {
     try {
       setLoading(true);
       const lastFeed = feeds[feeds.length - 1];
@@ -29,7 +64,7 @@ export default function FeedView() {
       const q = query(
         collection(firestore, 'posts'),
         orderBy('timestamp', 'desc'),
-        startAfter(lastFeed),
+        startAfter(lastFeed.timestamp),
         limit(5), // Adjust the limit as needed
       );
 
@@ -59,7 +94,7 @@ export default function FeedView() {
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchFirstFeed();
   }, []);
 
   useEffect(() => {
@@ -67,7 +102,7 @@ export default function FeedView() {
       observer.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting) {
-            fetchPosts();
+            fetchFeeds();
           }
         },
         {
@@ -95,14 +130,14 @@ export default function FeedView() {
         feeds.map((feed, key) => (
           <Feed
             key={key}
-            email={feed.data().userEmail}
-            name={feed.data().userName}
-            img={feed.data().userImg}
+            email={feed.userEmail}
+            name={feed.userName}
+            img={feed.userImg}
             feedId={feed.id}
-            feedImg={feed.data().feedImg}
-            feedCaption={feed.data().feedCaption}
-            likes={feed.data().feedLikes}
-            comments={feed.data().feedComments}
+            feedImg={feed.image}
+            feedCaption={feed.caption}
+            likes={feed.feedLikes}
+            comments={feed.feedComments}
           />
         ))
       ) : (

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 
+import dynamic from 'next/dynamic';
+
 import { useSession } from 'next-auth/react';
 
+import Suggestion from '@/components/FooterBar/Suggestion';
 import Miniprofile from '@/components/Miniprofile/Miniprofile';
-import Suggestion from '@/components/Suggestion';
 
-function Sidebar() {
+function FooterBar() {
   const { data: session } = useSession();
   const [width, setWidth] = useState<number>(window.innerWidth);
 
@@ -18,7 +20,7 @@ function Sidebar() {
 
     const handleWindowResize = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleResize, 200);
+      timeoutId = setTimeout(handleResize, 10);
     };
 
     window.addEventListener('resize', handleWindowResize);
@@ -30,8 +32,8 @@ function Sidebar() {
 
   return (
     <div className='flex flex-row'>
-      {width >= 1100 && (
-        <div className='flex flex-col sm:mr-[0.5vw] lg:mr-[1vw] xl:mr-[7vw]'>
+      {width >= 1092 && (
+        <div className='ml-4 flex flex-col lg:mr-[2vw] xl:mr-[7vw]'>
           <div className='pt-[2.5rem]'>
             <Miniprofile
               email={session?.user.email!}
@@ -40,7 +42,7 @@ function Sidebar() {
               type='onSidebarCurrentUser'
             />
             <p className='pt-[1.5rem] text-[0.95rem] text-stone-700'>
-              회원님을 위한 추천　　　　　　　모두 보기
+              회원님을 위한 추천　　　　　　모두 보기
             </p>
 
             <Suggestion />
@@ -48,7 +50,7 @@ function Sidebar() {
             <p className='font-NSN200 pt-[2.5rem] text-[0.7rem]/[18px] tracking-wider'>
               소개.도움말.홍보 센터.API.채용 정보
               <br />
-              개인정보처리방침.약관.위치.언어.EVERYT COPIED
+              이 사이트는 학습 목적으로 만들어졌습니다.
               <br />© 2023 INSTAGRAM CLONE WITH NEXT.JS
             </p>
           </div>
@@ -58,4 +60,6 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default dynamic(() => Promise.resolve(FooterBar), {
+  ssr: false,
+});

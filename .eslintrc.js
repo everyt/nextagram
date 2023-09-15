@@ -68,6 +68,8 @@ module.exports = {
     "consistent-return": 0,
     "no-constant-condition": 0,
     "react/no-array-index-key": 0,
-    "no-console": 0
+    "no-console": 0,
+    "no-plusplus": 0,
+    "no-await-in-loop": 0
   }
 }

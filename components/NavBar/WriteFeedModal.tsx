@@ -1,10 +1,4 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from 'firebase/firestore';
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 
 import { useEffect, useState } from 'react';
@@ -13,7 +7,7 @@ import { useSession } from 'next-auth/react';
 
 import Modal from '@/components/Common/Modal';
 import Textarea from '@/components/Common/Textarea';
-import upload from '@/components/Common/Upload';
+import Upload from '@/components/Common/Upload';
 import { useSelectedFile } from '@/hooks/useSelectedFile';
 import { firebaseStorage, firestore } from '@/lib/firebase';
 import { allowScroll, preventScroll } from '@/lib/utils/modal';
@@ -81,14 +75,12 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
 
       if (selectedFile) {
         const imageRef = ref(firebaseStorage, `posts/${feedRef.id}/image`);
-        await uploadString(imageRef, selectedFile, 'data_url').then(
-          async () => {
-            const imageDownloadUrl = await getDownloadURL(imageRef);
-            await updateDoc(doc(firestore, 'feeds', feedRef.id!), {
-              feedImg: imageDownloadUrl,
-            });
-          },
-        );
+        await uploadString(imageRef, selectedFile, 'data_url').then(async () => {
+          const imageDownloadUrl = await getDownloadURL(imageRef);
+          await updateDoc(doc(firestore, 'feeds', feedRef.id!), {
+            feedImg: imageDownloadUrl,
+          });
+        });
         setSyncStatus(3);
       } else {
         setSyncStatus(2);
@@ -116,7 +108,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
       boolean={boolean}
       handleClose={handleClose}
     >
-      <upload.div
+      <Upload.div
         className='h-[530px] w-[700px]'
         handleDropFile={handleDropSelectedFile}
         handleDragOver={handleDragOver}
@@ -144,18 +136,18 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
                     공유하기
                   </button>
                 ) : (
-                  <upload.input
+                  <Upload.input
                     className='cursor-pointer rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
                     handleInputFile={handleInputSelectedFile}
                   >
                     컴퓨터에서 선택
-                  </upload.input>
+                  </Upload.input>
                 )}
               </div>
             </article>
           )}
         </section>
-      </upload.div>
+      </Upload.div>
     </Modal>
   );
 }

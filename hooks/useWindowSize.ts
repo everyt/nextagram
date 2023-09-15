@@ -12,25 +12,26 @@ export default function useWindowSize() {
     height: 1080,
   });
 
+  const handleResize = () => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
+
   useEffect(() => {
-    // only execute all the code below in client side
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
+    let timeoutId: NodeJS.Timeout;
 
-    // Add event listener
-    window.addEventListener('resize', handleResize);
+    const handleWindowResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleResize, 10);
+    };
 
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
+    window.addEventListener('resize', handleWindowResize);
 
-    // Remove event listener on cleanup
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
   }, []); // Empty array ensures that effect is only run on mount
   return windowSize;
 }
