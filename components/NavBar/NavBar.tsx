@@ -51,7 +51,6 @@ export default function NavBar() {
     setWidth(windowSize < 182 ? 75 : windowSize);
     setNavBarMargin(windowSize < 182 ? 85 : 300);
     setDropdownWidth(windowSize < 182 ? windowSize - 42 : windowSize - 42);
-
     setShowOnlyIcon(windowSize < 182);
     setSizeUnderMinWidth(windowSize < 182);
   }, [windowSize]);
