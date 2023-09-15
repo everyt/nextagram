@@ -27,7 +27,7 @@ const Icons = [
 ];
 
 export default function NavBar() {
-  const size = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
+  const windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
   const [width, setWidth] = useState<number>(182);
   const [dropdownWidth, setDropdownWidth] = useState<number>(140);
 
@@ -36,28 +36,28 @@ export default function NavBar() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDropDown, setOpenDropDown] = useState<boolean>(false);
   const [showOnlyIcon, setShowOnlyIcon] = useState<boolean>(false);
-  const [isUnderMinWidth, setIsUnderMinWidth] = useState<boolean>(false);
+  const [sizeUnderMinWidth, setSizeUnderMinWidth] = useState<boolean>(false);
 
   useEffect(() => {
-    if (showOnlyIcon === false && size < 240) {
-      setWidth(size);
-      setDropdownWidth(size - 42);
+    if (showOnlyIcon === false && windowSize < 240) {
+      setWidth(windowSize);
+      setDropdownWidth(windowSize - 42);
     }
-    if (size < 182) {
+    if (windowSize < 182) {
       setWidth(75);
       setDropdownWidth(45);
       setShowOnlyIcon(true);
-      setIsUnderMinWidth(true);
+      setSizeUnderMinWidth(true);
     } else {
       setShowOnlyIcon(false);
-      setIsUnderMinWidth(false);
+      setSizeUnderMinWidth(false);
     }
-  }, [size]);
+  }, [windowSize]);
 
   const handleClickButton = () => {
-    if (!isUnderMinWidth) {
-      setWidth(width === 75 ? size : 75);
-      setDropdownWidth(dropdownWidth === 45 ? size - 42 : 45);
+    if (!sizeUnderMinWidth) {
+      setWidth(width === 75 ? windowSize : 75);
+      setDropdownWidth(dropdownWidth === 45 ? windowSize - 42 : 45);
       setShowOnlyIcon((prev) => !prev);
     } else {
       setWidth(width === 75 ? 182 : 75);
@@ -100,6 +100,7 @@ export default function NavBar() {
               variants={variants}
               transition={{ ease: 'easeInOut', duration: 0.4 }}
             />
+
             <article className='mt-20'>
               {[
                 [0, '/', '홈'],
@@ -126,8 +127,10 @@ export default function NavBar() {
                 </NavBarButton>
               ))}
             </article>
+
             <article>
               {openDropDown && <DropDown showOnlyIcon={showOnlyIcon} />}
+
               <NavBarButton
                 index={8}
                 highlight={highlight}
