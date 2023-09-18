@@ -19,7 +19,6 @@ function Suggestion() {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    // Firestore에서 랜덤한 5명의 사용자 데이터를 가져오는 함수를 정의합니다.
     const fetchRandomUsersFromFirestore = async () => {
       try {
         const usersCollection = collection(firestore, 'users');
@@ -43,8 +42,7 @@ function Suggestion() {
         console.error('Firestore 데이터를 가져오는 중 에러 발생:', error);
       }
     };
-
-    fetchRandomUsersFromFirestore(); // 데이터를 가져오는 함수를 호출합니다.
+    fetchRandomUsersFromFirestore();
   }, []);
 
   return (
