@@ -108,6 +108,7 @@ function Feed({ userId, userEmail, userName, userImg, feedId, feedImg, feedCapti
   );
 
   const likePost = async () => {
+    console.log('likePost');
     try {
       if (hasLikes) {
         await deleteDoc(doc(firestore, 'feeds', feedId, 'likes', session?.user?.id));
@@ -159,13 +160,13 @@ function Feed({ userId, userEmail, userName, userImg, feedId, feedImg, feedCapti
       </article>
 
       <article>
-        <p className='text-[0.88rem]'>{`좋아요 ${likes.length}개`}</p>
+        <p className='text-[0.88rem]'>좋아요 {likes.length}개</p>
         <div className='my-2 flex content-center text-[0.88rem]'>
           <b className='mr-2 text-[0.9rem]'>{userName}</b>
           <p>{feedCaption}</p>
         </div>
         <div className='flex content-center text-[0.88rem]' onClick={handleOpenComment}>
-          {`댓글 ${comments.length}개`} 모두 보기
+          댓글 {comments.length}개 모두 보기
         </div>
         {openComments && (
           <div className=''>
