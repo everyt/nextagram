@@ -75,7 +75,7 @@ export default function FeedView() {
         },
         {
           root: null, // Use the viewport as the root
-          rootMargin: '0px', // No additional margin
+          rootMargin: '20px', // No additional margin
           threshold: 0.1, // Trigger when 10% of the target is visible
         },
       );
@@ -96,7 +96,7 @@ export default function FeedView() {
   }, [hasMore, loading]);
 
   return (
-    <div className='pb-10'>
+    <>
       {feeds ? (
         feeds.map((feed, key) => (
           <Feed
@@ -121,6 +121,6 @@ export default function FeedView() {
       {loading && <FeedSkeleton />}
       {hasMore && <div className='load-more-trigger' />}
       {!hasMore && <CheckedEverything />}
-    </div>
+    </>
   );
 }
