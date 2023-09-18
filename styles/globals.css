@@ -2,32 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .navbar-button {
-    @apply flex content-center rounded-lg p-2 hover:bg-stone-100;
-  }
-}
-
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  overflow-x: hidden;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-} */
-//background: linear-gradient(
-    to bottom,
-    transparent,
-    rgb(var(--background-end-rgb))
-  )
-  rgb(var(--background-start-rgb));
-//color: rgb(var(--foreground-rgb));
+html {
+  background-color: #fff; /* 백그라운드 색상을 밝게 설정 */
+  color: #333; /* 텍스트 색상을 어두운 색상으로 설정 */
+}
 
-body {
+.dark {
+  background-color: #333; /* 백그라운드 색상을 어둡게 설정 */
+  color: #fff; /* 텍스트 색상을 밝게 설정 */
 }

@@ -11,29 +11,6 @@ import DropDown from './DropDown';
 import NavBarButton from './NavBarButton';
 import WriteFeedModal from './WriteFeedModal';
 
-const Icons = useMemo(
-  () => [
-    ['mingcute:home-4-line', 'mingcute:home-4-fill'],
-    ['mdi:compass-outline', 'eos-icons:compass'],
-    ['iconamoon:search', 'iconamoon:search-bold'],
-    ['solar:video-frame-play-horizontal-outline', 'solar:video-frame-play-horizontal-bold'],
-    ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
-    ['ion:heart-outline', 'ion:heart'],
-    ['jam:write', 'jam:write-f'],
-    ['iconamoon:profile-circle-light', 'iconamoon:profile-circle-fill'],
-    ['ph:list', 'ph:list-bold'],
-  ],
-  [],
-);
-
-const variants = useMemo(
-  () => ({
-    hide: { opacity: [1], scale: [0, 1] },
-    show: { opacity: [0, 1], scale: [1] },
-  }),
-  [],
-);
-
 export default function NavBar() {
   const windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
   const [width, setWidth] = useState<number>(182);
@@ -41,8 +18,10 @@ export default function NavBar() {
   const [navBarMargin, setNavBarMargin] = useState<number>(300);
 
   const [highlight, setHighlight] = useState<number>(0);
+  const [highlightDropdown, setHighlightDropdown] = useState<boolean>(false);
 
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [darkmodeSVG, setDarkmodeSVG] = useState<boolean>(false);
   const [openDropDown, setOpenDropDown] = useState<boolean>(false);
   const [showOnlyIcon, setShowOnlyIcon] = useState<boolean>(false);
   const [sizeUnderMinWidth, setSizeUnderMinWidth] = useState<boolean>(false);
@@ -69,7 +48,31 @@ export default function NavBar() {
 
   const handleOpenDropDown = () => {
     setOpenDropDown((prev) => !prev);
+    setHighlightDropdown((prev) => !prev);
   };
+
+  const Icons = useMemo(
+    () => [
+      ['mingcute:home-4-line', 'mingcute:home-4-fill'],
+      ['mdi:compass-outline', 'eos-icons:compass'],
+      ['iconamoon:search', 'iconamoon:search-bold'],
+      ['solar:video-frame-play-horizontal-outline', 'solar:video-frame-play-horizontal-bold'],
+      ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
+      ['ion:heart-outline', 'ion:heart'],
+      ['jam:write', 'jam:write-f'],
+      ['iconamoon:profile-circle-light', 'iconamoon:profile-circle-fill'],
+      ['ph:list', 'ph:list-bold'],
+    ],
+    [],
+  );
+
+  const variants = useMemo(
+    () => ({
+      hide: { opacity: [1], scale: [0, 1] },
+      show: { opacity: [0, 1], scale: [1] },
+    }),
+    [],
+  );
 
   return (
     <>
@@ -79,14 +82,16 @@ export default function NavBar() {
           animate={{ width }}
           transition={{ ease: 'easeInOut', duration: 0.35 }}
         >
-          <div className='border-r-[1px] border-stone-200 bg-white'>
+          <div className='border-r-[1px] border-stone-300 bg-white dark:border-stone-600 dark:bg-[#333]'>
             <section className='flex h-screen flex-col py-2 pl-1 pr-5'>
               <article>
                 <motion.img
                   className={`fixed ml-3 mr-3 pt-3 ${
                     showOnlyIcon ? 'mb-4 mt-3 h-12 w-10' : 'mb-3 h-16 w-36'
                   }`}
-                  src={`/svg/Instagram-${showOnlyIcon ? 'black-icon' : 'text'}.svg`}
+                  src={`/svg/Instagram-${showOnlyIcon ? 'icon' : 'text'}-${
+                    darkmodeSVG ? 'dark' : 'light'
+                  }.svg`}
                   alt='Instagram'
                   height={100}
                   width={280}
@@ -108,6 +113,7 @@ export default function NavBar() {
                   [7, '/profile', '프로필'],
                 ].map(([key, onClick, text]) => (
                   <NavBarButton
+                    type='normal'
                     key={key as number}
                     index={key as number}
                     highlight={highlight}
@@ -125,12 +131,12 @@ export default function NavBar() {
               </article>
 
               <article>
-                {openDropDown && <DropDown showOnlyIcon={showOnlyIcon} />}
+                {openDropDown && (
+                  <DropDown showOnlyIcon={showOnlyIcon} setDarkmodeSVG={setDarkmodeSVG} />
+                )}
 
                 <NavBarButton
-                  index={8}
-                  highlight={highlight}
-                  setHighlight={setHighlight}
+                  type='dropdown'
                   showOnlyIcon={showOnlyIcon}
                   className='absolute bottom-6'
                   style={{ width: `${dropdownWidth}px` }}
@@ -138,7 +144,7 @@ export default function NavBar() {
                   text='더 보기'
                 >
                   <Icon
-                    icon={`${Icons[8][highlight === 8 ? 1 : 0]}`}
+                    icon={`${Icons[8][highlightDropdown ? 1 : 0]}`}
                     style={{ fontSize: '30px' }}
                   />
                 </NavBarButton>

@@ -1,3 +1,4 @@
+import { Icon } from '@iconify-icon/react';
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 
@@ -42,12 +43,16 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
     handleResetSelectedFile,
   } = useSelectedFile(ALLOWED_IMAGEEXTENSION);
 
+  const [prevScrollY, setPrevScrollY] = useState<number | null>(null);
+
   useEffect(() => {
-    const prevScrollY = preventScroll();
-    return () => {
+    if (boolean) {
+      setPrevScrollY(preventScroll());
+    } else if (prevScrollY !== null) {
       allowScroll(prevScrollY);
-    };
-  }, []);
+      setPrevScrollY(null);
+    }
+  }, [boolean, prevScrollY]);
 
   const setCloseModal = () => {
     setBoolean(false);
@@ -126,6 +131,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
                 onChange={handleChange}
                 placeholder='감정을 공유하세요'
               />
+              <Icon icon='tabler:photo-up' style={{ fontSize: '42px' }} />
               <div className='ml-8 flex flex-col'>
                 <p className='mb-4'>사진을 여기에 끌어다 놓으세요</p>
                 {selectedFile ? (
@@ -140,6 +146,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
                     className='cursor-pointer rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
                     handleInputFile={handleInputSelectedFile}
                   >
+                    <Icon icon='heroicons-solid:upload' style={{ fontSize: '18px' }} />
                     컴퓨터에서 선택
                   </Upload.input>
                 )}

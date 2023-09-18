@@ -29,7 +29,7 @@ export default function FeedView() {
           collection(firestore, 'posts'),
           orderBy('timestamp', 'desc'),
           startAfter(lastTimestamp),
-          limit(1),
+          limit(3),
         );
       }
 
@@ -41,7 +41,7 @@ export default function FeedView() {
           } else {
             setHasMore(true);
             const newFeeds = querySnapshot.docs.map((doc) => doc.data());
-            const lastFeed = initialFetch ? newFeeds[newFeeds.length - 1] : newFeeds[0];
+            const lastFeed = newFeeds.length > 0 ? newFeeds[newFeeds.length - 1] : newFeeds[0];
             setLastTimestamp(lastFeed.timestamp);
             setFeeds((prev) => (initialFetch ? newFeeds : [...prev, ...newFeeds]));
           }
@@ -96,7 +96,7 @@ export default function FeedView() {
   }, [hasMore, loading]);
 
   return (
-    <>
+    <div className='pb-10'>
       {feeds ? (
         feeds.map((feed, key) => (
           <Feed
@@ -119,8 +119,8 @@ export default function FeedView() {
         </>
       )}
       {loading && <FeedSkeleton />}
-      {hasMore && <div className='load-more-trigger' />}
       {!hasMore && <CheckedEverything />}
-    </>
+      {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
+    </div>
   );
 }

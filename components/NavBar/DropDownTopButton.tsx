@@ -7,14 +7,10 @@ import { memo } from 'react';
 import { useRouter } from 'next/navigation';
 
 type Props = {
-  type: 'normal' | 'dropdown';
-  index?: number;
   children: React.ReactNode;
   text: string;
   className?: string;
   style?: React.CSSProperties;
-  highlight?: number;
-  setHighlight?: React.Dispatch<React.SetStateAction<number>>;
   showOnlyIcon: boolean;
   onClick: string | (() => void);
 };
@@ -24,30 +20,17 @@ const variants = {
   show: { opacity: [0, 0, 0.1, 0.5, 1] },
 };
 
-function NavBarButton({
-  type,
-  index,
-  children,
-  text,
-  className,
-  style,
-  highlight,
-  setHighlight,
-  showOnlyIcon,
-  onClick,
-}: Props) {
+function DropDownTopButton({ children, text, className, style, showOnlyIcon, onClick }: Props) {
   const router = useRouter();
 
   const handleClick = () => {
     typeof onClick === 'string' ? router.push(onClick!) : onClick!();
-    if (type === 'normal')
-      setHighlight!(!(typeof onClick === 'string') && index === highlight ? 0 : index!);
   };
 
   return (
     <button
       onClick={handleClick}
-      className={`mx-2 mb-2 flex w-full content-center whitespace-nowrap rounded-lg p-2 hover:bg-stone-100 ${className} dark:hover:bg-stone-600`}
+      className={`mx-2 mb-2 flex w-full content-center whitespace-nowrap rounded-lg p-2 hover:bg-stone-100 ${className}`}
       style={style}
     >
       {children}
@@ -63,4 +46,4 @@ function NavBarButton({
   );
 }
 
-export default memo(NavBarButton);
+export default memo(DropDownTopButton);

@@ -4,6 +4,8 @@ import { Icon } from '@iconify-icon/react';
 
 import { memo, useMemo } from 'react';
 
+import Image from 'next/image';
+
 import Miniprofile from '@/components/Miniprofile/Miniprofile';
 
 type Props = {
@@ -17,55 +19,48 @@ type Props = {
   comments: number;
 };
 
-function Feed({
-  email,
-  name,
-  img,
-  feedId,
-  feedImg,
-  feedCaption,
-  likes,
-  comments,
-}: Props) {
+function Feed({ email, name, img, feedId, feedImg, feedCaption, likes, comments }: Props) {
   const memorizedEmail = useMemo(() => email, [email]);
   const memorizedName = useMemo(() => name, [name]);
   const memorizedImg = useMemo(() => img, [img]);
 
   return (
-    <section className='mt-1 h-auto w-[450px] border-b-[1px] border-stone-300 pb-4'>
+    <section className='mt-1 h-auto w-[450px] border-b-[1px] border-stone-300 pb-4 dark:border-stone-500'>
       <article>
-        <Miniprofile
-          email={memorizedEmail}
-          name={memorizedName}
-          img={memorizedImg}
-          type='onFeed'
-        />
+        <Miniprofile email={memorizedEmail} name={memorizedName} img={memorizedImg} type='onFeed' />
       </article>
 
       <article>
-        <img className='mt-[0.8rem] w-[inherit]' src={feedImg} alt='' />
+        <Image
+          className='mt-[0.8rem] w-[inherit]'
+          src={feedImg}
+          alt={feedImg}
+          blurDataURL={feedImg}
+          placeholder='blur'
+          width={450}
+          height={450}
+        />
       </article>
 
       <article className='flex content-center pt-[0.8rem]'>
         <button className='cursor-pointer'>
           <Icon icon='ion:heart-outline' style={{ fontSize: '26px' }} />
         </button>
-        <Icon
-          className='ml-4'
-          icon='ion:paper-plane-outline'
-          style={{ fontSize: '26px' }}
-        />
-        <Icon className='ml-4' icon='uil:comment' style={{ fontSize: '26px' }} />
+        <button className='cursor-pointer'>
+          <Icon className='ml-4' icon='ion:paper-plane-outline' style={{ fontSize: '26px' }} />
+        </button>
+        <button className='cursor-pointer'>
+          <Icon className='ml-5' icon='iconoir:message' style={{ fontSize: '26px' }} />
+        </button>
       </article>
 
       <article>
-        <p className='pt-[0.8rem] text-[0.92rem]'>{`좋아요 ${likes}개`}</p>
-        <p className='my-2 text-[0.88rem]'>
-          {name} {feedCaption}
-        </p>
-        <p className='text-[0.9rem]'>
-          {`댓글 ${comments}개`} <p>모두 보기</p>
-        </p>
+        <p className='text-[0.88rem]'>{`좋아요 ${likes}개`}</p>
+        <div className='my-2 flex content-center text-[0.88rem]'>
+          <b className='mr-2 text-[0.9rem]'>{name}</b>
+          <p>{feedCaption}</p>
+        </div>
+        <p className='text-[0.88rem]'>{`댓글 ${comments}개`} 모두 보기</p>
       </article>
     </section>
   );

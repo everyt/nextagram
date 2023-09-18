@@ -11,16 +11,12 @@ function MiniProfile({ email, name, img, type }: Props) {
   return (
     <section className='mt-[1rem] flex content-center'>
       <img
-        className={`rounded-full ${
-          type === 'onFeed' ? 'h-[36px] w-[36px]' : 'h-[45px] w-[45px]'
-        }`}
+        className={`rounded-full ${type === 'onFeed' ? 'h-[36px] w-[36px]' : 'h-[45px] w-[45px]'}`}
         src={img}
-        alt=''
+        alt={name}
         width={type === 'onFeed' ? 36 : 45}
       />
-      <article
-        className={`ml-3 flex flex-col text-[0.8rem] ${type !== 'onFeed' && 'mt-1'}`}
-      >
+      <article className={`ml-3 flex flex-col text-[0.8rem] ${type !== 'onFeed' && 'mt-1'}`}>
         <span className='font-NSN700'>{name}</span>
 
         <span>{email}</span>
