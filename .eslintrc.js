@@ -71,6 +71,7 @@ module.exports = {
     "no-console": 0,
     "no-plusplus": 0,
     "no-await-in-loop": 0,
-    "no-nested-ternary": 0
+    "no-nested-ternary": 0,
+    "no-unsafe-optional-chaining": 0
   }
 }

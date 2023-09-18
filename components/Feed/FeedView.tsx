@@ -23,15 +23,17 @@ export default function FeedView() {
       let q;
 
       if (initialFetch) {
-        q = query(collection(firestore, 'posts'), orderBy('timestamp', 'desc'), limit(3));
+        q = query(collection(firestore, 'feeds'), orderBy('timestamp', 'desc'), limit(3));
       } else {
         q = query(
-          collection(firestore, 'posts'),
+          collection(firestore, 'feeds'),
           orderBy('timestamp', 'desc'),
           startAfter(lastTimestamp),
           limit(3),
         );
       }
+
+      onSnapshot(q, (snapshot) => {});
 
       const unsubscribe = onSnapshot(
         q,
@@ -40,9 +42,9 @@ export default function FeedView() {
             setHasMore(false);
           } else {
             setHasMore(true);
-            const newFeeds = querySnapshot.docs.map((doc) => doc.data());
+            const newFeeds = querySnapshot.docs;
             const lastFeed = newFeeds.length > 0 ? newFeeds[newFeeds.length - 1] : newFeeds[0];
-            setLastTimestamp(lastFeed.timestamp);
+            setLastTimestamp(lastFeed.data().timestamp);
             setFeeds((prev) => (initialFetch ? newFeeds : [...prev, ...newFeeds]));
           }
         },
@@ -101,14 +103,13 @@ export default function FeedView() {
         feeds.map((feed, key) => (
           <Feed
             key={key}
-            email={feed.userEmail}
-            name={feed.userName}
-            img={feed.userImg}
+            userId={feed.data().userId}
+            userEmail={feed.data().userEmail}
+            userName={feed.data().userName}
+            userImg={feed.data().userImg}
             feedId={feed.id}
-            feedImg={feed.image}
-            feedCaption={feed.caption}
-            likes={feed.feedLikes}
-            comments={feed.feedComments}
+            feedImg={feed.data().feedImg}
+            feedCaption={feed.data().feedCaption}
           />
         ))
       ) : (
@@ -119,7 +120,7 @@ export default function FeedView() {
         </>
       )}
       {loading && <FeedSkeleton />}
-      {!hasMore && <CheckedEverything />}
+      {!loading && !hasMore && <CheckedEverything />}
       {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
     </div>
   );

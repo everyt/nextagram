@@ -14,24 +14,26 @@ export default NextAuth({
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_SECRET as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID as string,
-      clientSecret: process.env.KAKAO_SECRET as string,
+      clientSecret: process.env.KAKAO_CLIENT_SECRET as string,
     }),
     NaverProvider({
       clientId: process.env.NAVER_CLIENT_ID as string,
-      clientSecret: process.env.NAVER_SECRET as string,
+      clientSecret: process.env.NAVER_CLIENT_SECRET as string,
     }),
   ],
   callbacks: {
-    async session({ session, token }: any) {
-      session.user.uid = token.sub;
+    session: async ({ session, token, user }) => {
+      if (session?.user) {
+        session.user.id = user.id;
+      }
       return session;
     },
   },

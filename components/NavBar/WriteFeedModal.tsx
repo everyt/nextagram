@@ -63,34 +63,36 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
     setCloseModal();
   };
 
-  const uploadFeed = async () => {
+  const handleUploadFeed = async () => {
     setIsSyncing(true);
 
     try {
-      const collectionRef = collection(firestore, 'feeds');
-      const feedData = {
-        userUid: session?.user.uid,
+      console.table(session);
+      const feedRef = await addDoc(collection(firestore, 'feeds'), {
+        userId: session?.user.id,
         userEmail: session?.user.email,
         userName: session?.user.name,
         userImg: session?.user.image,
         feedCaption,
         timestamp: serverTimestamp(),
-      };
-      const feedRef = await addDoc(collectionRef, feedData);
+      });
 
       if (selectedFile) {
-        const imageRef = ref(firebaseStorage, `posts/${feedRef.id}/image`);
+        const imageRef = ref(firebaseStorage, `feeds/${feedRef.id}/image`);
+
         await uploadString(imageRef, selectedFile, 'data_url').then(async () => {
           const imageDownloadUrl = await getDownloadURL(imageRef);
-          await updateDoc(doc(firestore, 'feeds', feedRef.id!), {
+          await updateDoc(doc(firestore, 'feeds', feedRef.id), {
             feedImg: imageDownloadUrl,
           });
         });
         setSyncStatus(3);
       } else {
+        console.log('No Image');
         setSyncStatus(2);
       }
     } catch (error) {
+      console.log(error);
       setSyncStatus(1);
     }
 
@@ -121,37 +123,43 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
         <header className='flex h-[45px] items-center justify-center border-b-2'>
           <b className='font-NSN200 mt-1'>새 게시물 만들기</b>
         </header>
-        <section className='flex h-[600px] flex-col items-center justify-center'>
+        <section className='flex h-[485px] flex-col items-center justify-center'>
           {isSyncing || isShowSyncStatus ? (
             <article className='text-blue-400'>{syncStatusMessage}</article>
           ) : (
-            <article className='flex flex-row'>
-              <Textarea
-                className='mb-6 h-[150px] w-[300px] cursor-pointer resize-none rounded-2xl border-2 p-4 text-center'
-                onChange={handleChange}
-                placeholder='감정을 공유하세요'
-              />
-              <Icon icon='tabler:photo-up' style={{ fontSize: '42px' }} />
-              <div className='ml-8 flex flex-col'>
-                <p className='mb-4'>사진을 여기에 끌어다 놓으세요</p>
-                {selectedFile ? (
-                  <button
-                    onClick={uploadFeed}
-                    className='rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
-                  >
-                    공유하기
-                  </button>
-                ) : (
-                  <Upload.input
-                    className='cursor-pointer rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
-                    handleInputFile={handleInputSelectedFile}
-                  >
-                    <Icon icon='heroicons-solid:upload' style={{ fontSize: '18px' }} />
-                    컴퓨터에서 선택
-                  </Upload.input>
-                )}
-              </div>
-            </article>
+            <>
+              <Icon icon='iconoir:post' style={{ fontSize: '150px' }} className='mb-16 mt-8' />
+              <article className='flex flex-row'>
+                <Textarea
+                  className='h-[150px] w-[300px] cursor-pointer resize-none rounded-2xl border-2 p-4 text-center'
+                  onChange={handleChange}
+                  placeholder='감정을 공유하세요'
+                />
+                <div className='ml-16 mt-8 flex flex-col'>
+                  <p className='mb-4'>사진을 여기에 끌어다 놓으세요</p>
+                  {selectedFile ? (
+                    <button
+                      onClick={handleUploadFeed}
+                      className='rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
+                    >
+                      공유하기
+                    </button>
+                  ) : (
+                    <Upload.input
+                      className='flex cursor-pointer content-center rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
+                      handleInputFile={handleInputSelectedFile}
+                    >
+                      <Icon
+                        icon='heroicons-solid:upload'
+                        style={{ fontSize: '18px' }}
+                        className='mt-1'
+                      />
+                      <p className='ml-3'>컴퓨터에서 선택</p>
+                    </Upload.input>
+                  )}
+                </div>
+              </article>
+            </>
           )}
         </section>
       </Upload.div>
