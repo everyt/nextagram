@@ -2,12 +2,11 @@ import { Icon } from '@iconify-icon/react';
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useSession } from 'next-auth/react';
 
 import Modal from '@/components/Common/Modal';
-import Textarea from '@/components/Common/Textarea';
 import Upload from '@/components/Common/Upload';
 import { useSelectedFile } from '@/hooks/useSelectedFile';
 import { firebaseStorage, firestore } from '@/lib/firebase';
@@ -15,7 +14,7 @@ import { allowScroll, preventScroll } from '@/lib/utils/modal';
 
 type WFModalProps = {
   boolean: boolean;
-  setBoolean: React.Dispatch<React.SetStateAction<boolean>>;
+  handleCloseModal: () => void;
 };
 
 const syncStatusDescript: { [key: number]: string } = {
@@ -25,7 +24,7 @@ const syncStatusDescript: { [key: number]: string } = {
   3: '피드를 작성했어요.',
 };
 
-export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
+export default function WriteFeedModal({ boolean, handleCloseModal }: WFModalProps) {
   const { data: session } = useSession();
 
   const [syncStatus, setSyncStatus] = useState<number>(0);
@@ -54,16 +53,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
     }
   }, [boolean, prevScrollY]);
 
-  const setCloseModal = () => {
-    setBoolean(false);
-  };
-
-  const handleClose = (ev: React.MouseEvent<HTMLElement>) => {
-    ev.preventDefault();
-    setCloseModal();
-  };
-
-  const handleUploadFeed = async () => {
+  const handleUploadFeed = useCallback(async () => {
     setIsSyncing(true);
 
     try {
@@ -76,15 +66,12 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
         feedCaption,
         timestamp: serverTimestamp(),
       });
-
       if (selectedFile) {
         const imageRef = ref(firebaseStorage, `feeds/${feedRef.id}/image`);
-
-        await uploadString(imageRef, selectedFile, 'data_url').then(async () => {
-          const imageDownloadUrl = await getDownloadURL(imageRef);
-          await updateDoc(doc(firestore, 'feeds', feedRef.id), {
-            feedImg: imageDownloadUrl,
-          });
+        await uploadString(imageRef, selectedFile, 'data_url');
+        const imageDownloadUrl = await getDownloadURL(imageRef);
+        await updateDoc(doc(firestore, 'feeds', feedRef.id), {
+          feedImg: imageDownloadUrl,
         });
         setSyncStatus(3);
       } else {
@@ -99,12 +86,15 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
     handleResetSelectedFile();
     setFeedCaption('');
     setIsSyncing(false);
-    if (syncStatus !== 0) setIsShowSyncStatus(true); // 모달창을 끌 때 초기화해줘야 함
-    if (!isShowSyncStatus) setCloseModal();
-  };
+    if (syncStatus !== 0) setIsShowSyncStatus(true);
+    if (!isShowSyncStatus) handleCloseModal();
+  }, [session, feedCaption, selectedFile]);
 
-  const handleChange = ({ value }: { value: string }) => {
-    setFeedCaption(value);
+  const handleCloseModalCallback = () => {
+    handleCloseModal();
+    setIsShowSyncStatus(false);
+    handleResetSelectedFile();
+    setFeedCaption('');
   };
 
   const syncStatusMessage = syncStatusDescript[syncStatus];
@@ -113,7 +103,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
     <Modal
       className='h-[530px] w-[700px] rounded-2xl bg-white'
       boolean={boolean}
-      handleClose={handleClose}
+      handleClose={handleCloseModalCallback}
     >
       <Upload.div
         className='h-[530px] w-[700px]'
@@ -130,9 +120,9 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
             <>
               <Icon icon='iconoir:post' style={{ fontSize: '150px' }} className='mb-16 mt-8' />
               <article className='flex flex-row'>
-                <Textarea
-                  className='h-[150px] w-[300px] cursor-pointer resize-none rounded-2xl border-2 p-4 text-center'
-                  onChange={handleChange}
+                <textarea
+                  className='h-[150px] w-[300px] cursor-pointer resize-none rounded-2xl border-2 p-4 text-center outline-none'
+                  onChange={(ev) => setFeedCaption(ev.target.value)}
                   placeholder='감정을 공유하세요'
                 />
                 <div className='ml-16 mt-8 flex flex-col'>
@@ -140,7 +130,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
                   {selectedFile ? (
                     <button
                       onClick={handleUploadFeed}
-                      className='rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
+                      className='rounded-lg bg-blue-500 p-2 px-4 text-start text-sm text-white'
                     >
                       공유하기
                     </button>
@@ -149,11 +139,7 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
                       className='flex cursor-pointer content-center rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
                       handleInputFile={handleInputSelectedFile}
                     >
-                      <Icon
-                        icon='heroicons-solid:upload'
-                        style={{ fontSize: '18px' }}
-                        className='mt-1'
-                      />
+                      <Icon icon='system-uicons:file-upload' style={{ fontSize: '24px' }} />
                       <p className='ml-3'>컴퓨터에서 선택</p>
                     </Upload.input>
                   )}

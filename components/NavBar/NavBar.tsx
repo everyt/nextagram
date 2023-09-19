@@ -46,6 +46,11 @@ export default function NavBar() {
     setOpenModal(true);
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setHighlight(0);
+  };
+
   const handleOpenDropDown = () => {
     setOpenDropDown((prev) => !prev);
     setHighlightDropdown((prev) => !prev);
@@ -152,7 +157,7 @@ export default function NavBar() {
             </section>
           </div>
         </motion.nav>
-        <WriteFeedModal boolean={openModal} setBoolean={setOpenModal} />
+        <WriteFeedModal boolean={openModal} handleCloseModal={handleCloseModal} />
       </div>
     </>
   );

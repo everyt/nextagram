@@ -1,4 +1,13 @@
-import { collection, limit, onSnapshot, orderBy, query, startAfter } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  startAfter,
+} from 'firebase/firestore';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -32,8 +41,6 @@ export default function FeedView() {
           limit(3),
         );
       }
-
-      onSnapshot(q, (snapshot) => {});
 
       const unsubscribe = onSnapshot(
         q,
@@ -97,6 +104,11 @@ export default function FeedView() {
     }
   }, [hasMore, loading]);
 
+  const handleDeleteFeed = async (feedId: string) => {
+    const feedRef = doc(firestore, 'feeds', feedId!);
+    await deleteDoc(feedRef);
+  };
+
   return (
     <div className='pb-10'>
       {feeds ? (
@@ -110,6 +122,7 @@ export default function FeedView() {
             feedId={feed.id}
             feedImg={feed.data().feedImg}
             feedCaption={feed.data().feedCaption}
+            handleDeleteFeed={handleDeleteFeed}
           />
         ))
       ) : (
@@ -120,7 +133,7 @@ export default function FeedView() {
         </>
       )}
       {loading && <FeedSkeleton />}
-      {!loading && !hasMore && <CheckedEverything />}
+      {feeds && !loading && !hasMore && <CheckedEverything />}
       {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
     </div>
   );
