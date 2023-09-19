@@ -8,8 +8,8 @@ export default function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
   const [windowSize, setWindowSize] = useState({
-    width: 1920,
-    height: 1080,
+    width: 1280,
+    height: 720,
   });
 
   const handleResize = () => {

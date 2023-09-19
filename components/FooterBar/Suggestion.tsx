@@ -43,7 +43,7 @@ function Suggestion() {
       }
     };
     fetchRandomUsersFromFirestore();
-  }, []);
+  }, [firestore]);
 
   return (
     <div>

@@ -1,21 +1,24 @@
 'use client';
 
 import { Icon } from '@iconify-icon/react';
-import { motion } from 'framer-motion';
+import { m, motion } from 'framer-motion';
 
-import { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 import useWindowSize from '@/hooks/useWindowSize';
 
+import LoadingScreen from '../LoadingScreen';
 import DropDown from './DropDown';
 import NavBarButton from './NavBarButton';
 import WriteFeedModal from './WriteFeedModal';
 
-export default function NavBar() {
-  const windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
-  const [width, setWidth] = useState<number>(182);
-  const [dropdownWidth, setDropdownWidth] = useState<number>(140);
-  const [navBarMargin, setNavBarMargin] = useState<number>(300);
+function NavBar() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  let windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
+  const [width, setWidth] = useState<number>(162);
+  const [dropdownWidth, setDropdownWidth] = useState<number>(120);
+  const [navBarMargin, setNavBarMargin] = useState<number>(280);
 
   const [highlight, setHighlight] = useState<number>(0);
   const [highlightDropdown, setHighlightDropdown] = useState<boolean>(false);
@@ -26,18 +29,34 @@ export default function NavBar() {
   const [showOnlyIcon, setShowOnlyIcon] = useState<boolean>(false);
   const [sizeUnderMinWidth, setSizeUnderMinWidth] = useState<boolean>(false);
 
+  const isClient = typeof window !== 'undefined';
+
+  const getInitialWidth = () => {
+    if (isClient) {
+      windowSize = window.innerWidth / 6;
+    }
+  };
+
   useEffect(() => {
-    setWidth(windowSize < 182 ? 75 : windowSize);
-    setNavBarMargin(windowSize < 182 ? 85 : 300);
-    setDropdownWidth(windowSize < 182 ? windowSize - 42 : windowSize - 42);
-    setShowOnlyIcon(windowSize < 182);
-    setSizeUnderMinWidth(windowSize < 182);
+    getInitialWidth();
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    setWidth(windowSize < 162 ? 75 : windowSize);
+    setNavBarMargin(windowSize < 162 ? 85 : 280);
+    setDropdownWidth(windowSize < 162 ? 120 : windowSize - 42);
+    setShowOnlyIcon(windowSize < 162);
+    setSizeUnderMinWidth(windowSize < 162);
   }, [windowSize]);
 
   const handleClickButton = () => {
     setWidth(width === 75 ? (!sizeUnderMinWidth ? windowSize : 182) : 75);
-    setNavBarMargin(85 ? 300 : 85);
-    setDropdownWidth(dropdownWidth === 45 ? (!sizeUnderMinWidth ? windowSize - 42 : 140) : 45);
+    setNavBarMargin(85 ? 280 : 85);
+    setDropdownWidth(dropdownWidth === 45 ? (!sizeUnderMinWidth ? windowSize - 42 : 120) : 45);
 
     setShowOnlyIcon((prev) => !prev);
   };
@@ -81,9 +100,10 @@ export default function NavBar() {
 
   return (
     <>
+      {isLoading && <LoadingScreen />}
       <div style={{ width: `${navBarMargin}px` }}>
         <motion.nav
-          className='fixed z-40 h-screen w-[182px] pr-1'
+          className='fixed z-40 h-screen w-[162px] pr-1'
           animate={{ width }}
           transition={{ ease: 'easeInOut', duration: 0.35 }}
         >
@@ -162,3 +182,5 @@ export default function NavBar() {
     </>
   );
 }
+
+export default memo(NavBar);

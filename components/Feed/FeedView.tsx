@@ -2,14 +2,14 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
   startAfter,
 } from 'firebase/firestore';
 
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import { firestore } from '@/lib/firebase';
 
@@ -17,41 +17,53 @@ import CheckedEverything from './CheckedEverything';
 import Feed from './Feed';
 import FeedSkeleton from './FeedSkeleton';
 
-export default function FeedView() {
-  const PAGE_SIZE = 10;
+function FeedView() {
   const [feeds, setFeeds] = useState<any[]>([]);
+  const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
-  const [lastDoc, setLastDoc] = useState<any | null>(null);
+  const [lastTimestamp, setLastTimestamp] = useState<any>(null);
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const fetchFeeds = async () => {
+  const fetchFeeds = async (initialFetch = false) => {
     try {
       setLoading(true);
+      setHasMore(false);
 
-      let q: any;
+      let q;
 
-      if (lastDoc) {
+      if (initialFetch) {
+        q = query(collection(firestore, 'feeds'), orderBy('timestamp', 'desc'), limit(10));
+      } else {
         q = query(
           collection(firestore, 'feeds'),
           orderBy('timestamp', 'desc'),
-          startAfter(lastDoc),
-          limit(PAGE_SIZE),
+          startAfter(lastTimestamp),
+          limit(10),
         );
-      } else {
-        q = query(collection(firestore, 'feeds'), orderBy('timestamp', 'desc'), limit(PAGE_SIZE));
       }
 
-      const querySnapshot = await getDocs(q);
+      const unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          if (querySnapshot.empty) {
+            setHasMore(false);
+          } else {
+            setHasMore(true);
+            const newFeeds = querySnapshot.docs;
+            const lastFeed = newFeeds.length > 0 ? newFeeds[newFeeds.length - 1] : newFeeds[0];
+            setLastTimestamp(lastFeed.data().timestamp);
+            setFeeds((prev) => (initialFetch ? newFeeds : [...prev, ...newFeeds]));
+          }
+        },
+        (error) => {
+          console.error(error);
+        },
+      );
 
-      if (querySnapshot.empty) {
-        setHasMore(false);
-      } else {
-        const newFeeds = querySnapshot.docs;
-        setLastDoc(newFeeds[newFeeds.length > 0 ? newFeeds.length - 1 : 0]);
-        setFeeds((prev) => [...prev, ...newFeeds]);
-        setHasMore(newFeeds.length === PAGE_SIZE);
-      }
+      return () => {
+        unsubscribe();
+      };
     } catch (error) {
       console.error(error);
     } finally {
@@ -60,7 +72,11 @@ export default function FeedView() {
   };
 
   useEffect(() => {
-    fetchFeeds(); // 페이지가 처음 로드될 때 호출
+    fetchFeeds(true); // 페이지가 처음 로드될 때 호출
+
+    setTimeout(() => {
+      setInitialLoading(false);
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -96,7 +112,6 @@ export default function FeedView() {
   const handleDeleteFeed = async (feedId: string) => {
     const feedRef = doc(firestore, 'feeds', feedId!);
     await deleteDoc(feedRef);
-    setFeeds((prev) => prev.filter((feed) => feed.feedId !== feedId));
   };
 
   return (
@@ -123,8 +138,10 @@ export default function FeedView() {
         </>
       )}
       {loading && <FeedSkeleton />}
-      {feeds && !loading && !hasMore && <CheckedEverything />}
+      {feeds && !initialLoading && !hasMore && <CheckedEverything />}
       {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
     </div>
   );
 }
+
+export default memo(FeedView);
