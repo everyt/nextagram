@@ -115,7 +115,7 @@ function FeedView() {
   };
 
   return (
-    <div className='pb-10'>
+    <div className='flex flex-col justify-start pb-10'>
       {feeds ? (
         feeds.map((feed, key) => (
           <Feed

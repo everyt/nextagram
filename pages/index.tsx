@@ -8,7 +8,7 @@ export default function Home() {
   const { data: session } = useSession();
   return (
     <>
-      <div className='flex flex-col justify-start'>
+      <div>
         <FeedView />
       </div>
       <div>
