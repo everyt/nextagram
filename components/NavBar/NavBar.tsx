@@ -9,15 +9,12 @@ import { useSession } from 'next-auth/react';
 
 import useWindowSize from '@/hooks/useWindowSize';
 
-import LoadingScreen from '../LoadingScreen';
 import DropDown from './DropDown';
 import NavBarButton from './NavBarButton';
 import WriteFeedModal from './WriteFeedModal';
 
 function NavBar() {
   const { data: session } = useSession();
-
-  const [isLoadingDone, setIsLoadingDone] = useState(false);
 
   let windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
   const [width, setWidth] = useState<number>(162);
@@ -42,9 +39,6 @@ function NavBar() {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoadingDone(true);
-    }, 300);
     getInitialWidth();
   }, []);
 
@@ -103,8 +97,7 @@ function NavBar() {
 
   return (
     <>
-      {!isLoadingDone && <LoadingScreen />}
-      {isLoadingDone && session ? (
+      {session ? (
         <div style={{ width: `${navBarMargin}px` }}>
           <motion.nav
             className='fixed z-40 h-screen w-[162px] pr-1'
