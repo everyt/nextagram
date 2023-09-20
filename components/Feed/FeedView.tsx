@@ -15,6 +15,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 
 import { firestore } from '@/lib/firebase';
 
+import LoadingScreen from '../LoadingScreen';
 import CheckedEverything from './CheckedEverything';
 import Feed from './Feed';
 import FeedSkeleton from './FeedSkeleton';
@@ -116,33 +117,36 @@ function FeedView() {
   };
 
   return (
-    <div className='flex flex-col justify-start pb-10'>
-      {feeds && initialLoadingDone ? (
-        feeds.map((feed, key) => (
-          <Feed
-            key={key}
-            userId={feed.data().userId}
-            userEmail={feed.data().userEmail}
-            userName={feed.data().userName}
-            userImg={feed.data().userImg}
-            feedId={feed.id}
-            feedImg={feed.data().feedImg}
-            feedCaption={feed.data().feedCaption}
-            timestamp={feed.data().timestamp}
-            handleDeleteFeed={handleDeleteFeed}
-          />
-        ))
-      ) : (
-        <>
-          {[...Array(5)].map((_, key) => (
-            <FeedSkeleton key={key} />
-          ))}
-        </>
-      )}
-      {loading && <FeedSkeleton />}
-      {feeds && initialLoadingDone && !hasMore && <CheckedEverything />}
-      {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
-    </div>
+    <>
+      {!initialLoadingDone && <LoadingScreen />}
+      <div className='flex flex-col justify-start pb-10'>
+        {feeds && initialLoadingDone ? (
+          feeds.map((feed, key) => (
+            <Feed
+              key={key}
+              userId={feed.data().userId}
+              userEmail={feed.data().userEmail}
+              userName={feed.data().userName}
+              userImg={feed.data().userImg}
+              feedId={feed.id}
+              feedImg={feed.data().feedImg}
+              feedCaption={feed.data().feedCaption}
+              timestamp={feed.data().timestamp}
+              handleDeleteFeed={handleDeleteFeed}
+            />
+          ))
+        ) : (
+          <>
+            {[...Array(5)].map((_, key) => (
+              <FeedSkeleton key={key} />
+            ))}
+          </>
+        )}
+        {loading && <FeedSkeleton />}
+        {feeds && initialLoadingDone && !hasMore && <CheckedEverything />}
+        {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
+      </div>
+    </>
   );
 }
 
