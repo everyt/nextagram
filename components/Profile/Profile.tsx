@@ -45,8 +45,9 @@ export default function Profile({ id }: { id?: string }) {
   }, [firestore]);
 
   useEffect(() => {
-    if (session?.user.id || id) {
-      const userId = id || session?.user.id;
+    if (session?.user.id) {
+      let userId = session?.user.id;
+      userId = id;
       const unsubscribe = onSnapshot(doc(firestore, 'users', userId), (snapshot) => {
         if (snapshot.exists()) {
           setUser(snapshot);
@@ -106,9 +107,11 @@ export default function Profile({ id }: { id?: string }) {
             {session?.user.id === user?.id ? (
               editMode ? (
                 <>
-                  <button className='absolute ml-[10.25rem] mt-16 text-sm'>
-                    <Icon icon='ion:checkmark-outline' onClick={handleUploadIntroduction} />
-                  </button>
+                  {!loading && (
+                    <button className='absolute ml-[10.25rem] mt-16 text-sm'>
+                      <Icon icon='ion:checkmark-outline' onClick={handleUploadIntroduction} />
+                    </button>
+                  )}
                   <button className='absolute ml-[11.25rem] mt-16 text-sm'>
                     <Icon icon='ph:x-light' onClick={handleToggleEditMode} />
                   </button>
