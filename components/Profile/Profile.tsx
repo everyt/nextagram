@@ -20,6 +20,10 @@ export default function Profile({ id }: { id?: string }) {
 
   const [feeds, setFeeds] = useState<any[]>([]);
 
+  const [userName, setUserName] = useState<string>('');
+  const [userEmail, setUserEmail] = useState<string>('');
+  const [userImg, setUserImg] = useState<string>('');
+
   const fetchFeeds = async () => {
     try {
       const unsubscribe = onSnapshot(
@@ -46,13 +50,15 @@ export default function Profile({ id }: { id?: string }) {
 
   useEffect(() => {
     if (session?.user.id) {
-      let userId = session?.user.id;
-      userId = id || userId;
-      const unsubscribe = onSnapshot(doc(firestore, 'users', userId), (snapshot) => {
+      const unsubscribe = onSnapshot(doc(firestore, 'users', id || session.user.id), (snapshot) => {
         if (snapshot.exists()) {
           setUser(snapshot);
         }
       });
+
+      setUserName(user.data().name || session.user.name);
+      setUserEmail(user.data().email || session.user.email);
+      setUserImg(user.data().image || session.user.image);
 
       return () => {
         unsubscribe();
@@ -90,11 +96,7 @@ export default function Profile({ id }: { id?: string }) {
     <>
       <div className='absolute flex h-[200px] w-screen justify-center border-b-2'>
         <div className='ml-[5em] mt-10 flex content-center'>
-          <img
-            className='h-[130px] w-[130px] rounded-full'
-            src={user?.data().image || session?.user.image}
-            alt=''
-          />
+          <img className='h-[130px] w-[130px] rounded-full' src={userImg} alt='' />
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -102,8 +104,8 @@ export default function Profile({ id }: { id?: string }) {
             transition={{ ease: 'easeInOut', duration: 0.35 }}
             className='ml-20 mt-2'
           >
-            <b>{user?.data().name || session?.user.name}</b>
-            <p>{user?.data().email || session?.user.email}</p>
+            <b>{userName}</b>
+            <p>{userEmail}</p>
             {session?.user.id === user?.id ? (
               editMode ? (
                 <>

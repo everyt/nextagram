@@ -42,9 +42,9 @@ function FooterBar() {
         <div className='ml-4 flex flex-col lg:mr-[2vw] xl:mr-[7vw]'>
           <div className='pt-[2.5rem]'>
             <Miniprofile
-              email={session?.user.email!}
-              name={session?.user.name!}
-              img={session?.user.image!}
+              email={session?.user.email}
+              name={session?.user.name}
+              img={session?.user.image}
               type='onSidebarCurrentUser'
             />
             <p className='pt-[1.5rem] text-[0.95rem] text-stone-700'>
