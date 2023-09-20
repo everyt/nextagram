@@ -47,7 +47,7 @@ export default function Profile({ id }: { id?: string }) {
   useEffect(() => {
     if (session?.user.id) {
       let userId = session?.user.id;
-      userId = id;
+      userId = id || userId;
       const unsubscribe = onSnapshot(doc(firestore, 'users', userId), (snapshot) => {
         if (snapshot.exists()) {
           setUser(snapshot);
