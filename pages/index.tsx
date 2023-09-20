@@ -1,5 +1,7 @@
-import FeedView from '@/components/Feed/FeedView';
-import FooterBar from '@/components/FooterBar/FooterBar';
+import dynamic from 'next/dynamic';
+
+const FeedView = dynamic(() => import('@/components/Feed/FeedView'), { ssr: false });
+const FooterBar = dynamic(() => import('@/components/FooterBar/FooterBar'), { ssr: false });
 
 export default function Home() {
   return (
