@@ -53,7 +53,7 @@ function Suggestion() {
         users.map((user, key) => (
           <Miniprofile
             key={key}
-            email={user.email}
+            email={user.email || '@kakao'}
             name={user.name}
             img={user.image}
             type='onSidebar'

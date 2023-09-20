@@ -40,9 +40,6 @@ export default NextAuth({
       if (!session?.user.email) {
         session.user.email = '@kakao';
       }
-      if (session?.user.name === '곽태웅') {
-        session.user.name = '윤서연';
-      }
       return session;
     },
   },
