@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 import { memo, useEffect, useMemo, useState } from 'react';
 
-import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 
 import useWindowSize from '@/hooks/useWindowSize';
 
@@ -14,7 +14,7 @@ import NavBarButton from './NavBarButton';
 import WriteFeedModal from './WriteFeedModal';
 
 function NavBar() {
-  const { data: session } = useSession();
+  const pathname = usePathname();
 
   let windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
   const [width, setWidth] = useState<number>(162);
@@ -97,7 +97,7 @@ function NavBar() {
 
   return (
     <>
-      {session ? (
+      {pathname !== '/login' ? (
         <div style={{ width: `${navBarMargin}px` }}>
           <motion.nav
             className='fixed z-40 h-screen w-[162px] pr-1'
@@ -176,7 +176,9 @@ function NavBar() {
           </motion.nav>
           <WriteFeedModal boolean={openModal} handleCloseModal={handleCloseModal} />
         </div>
-      ) : null}
+      ) : (
+        <div style={{ width: `${navBarMargin}px` }} />
+      )}
     </>
   );
 }
