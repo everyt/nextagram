@@ -1,5 +1,6 @@
 import { Icon } from '@iconify-icon/react';
 import { collection, doc, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
+import { motion } from 'framer-motion';
 
 import { useEffect, useState } from 'react';
 
@@ -92,7 +93,13 @@ export default function Profile({ id }: { id?: string }) {
             src={user?.data()?.image || session?.user.image}
             alt=''
           />
-          <div className='ml-20 mt-2'>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ ease: 'easeInOut', duration: 0.35 }}
+            className='ml-20 mt-2'
+          >
             <b>{user?.data()?.name || session?.user.name}</b>
             <p>{user?.data()?.email || session?.user.email}</p>
             {session?.user.id === user?.id ? (
@@ -129,7 +136,7 @@ export default function Profile({ id }: { id?: string }) {
                 {user?.data()?.Introduction || ''}
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
       <div className='absolute top-50 ml-16 flex h-[40px] w-screen justify-center'>
