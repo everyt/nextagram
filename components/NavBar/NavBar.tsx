@@ -38,11 +38,13 @@ function NavBar() {
   };
 
   useEffect(() => {
-    getInitialWidth();
-
     setTimeout(() => {
       setIsLoading(false);
     }, 300);
+  }, [isLoading]);
+
+  useEffect(() => {
+    getInitialWidth();
   }, []);
 
   useEffect(() => {

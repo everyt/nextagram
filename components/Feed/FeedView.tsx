@@ -72,11 +72,13 @@ function FeedView() {
   };
 
   useEffect(() => {
-    fetchFeeds(true); // 페이지가 처음 로드될 때 호출
-
     setTimeout(() => {
       setInitialLoading(false);
     }, 300);
+  }, [initialLoading]);
+
+  useEffect(() => {
+    fetchFeeds(true); // 페이지가 처음 로드될 때 호출
   }, []);
 
   useEffect(() => {
@@ -115,33 +117,37 @@ function FeedView() {
   };
 
   return (
-    <div className='flex flex-col justify-start pb-10'>
-      {feeds ? (
-        feeds.map((feed, key) => (
-          <Feed
-            key={key}
-            userId={feed.data().userId}
-            userEmail={feed.data().userEmail}
-            userName={feed.data().userName}
-            userImg={feed.data().userImg}
-            feedId={feed.id}
-            feedImg={feed.data().feedImg}
-            feedCaption={feed.data().feedCaption}
-            timestamp={feed.data().timestamp}
-            handleDeleteFeed={handleDeleteFeed}
-          />
-        ))
-      ) : (
-        <>
-          {[...Array(5)].map((_, key) => (
-            <FeedSkeleton key={key} />
-          ))}
-        </>
+    <>
+      {initialLoading && (
+        <div className='flex flex-col justify-start pb-10'>
+          {feeds ? (
+            feeds.map((feed, key) => (
+              <Feed
+                key={key}
+                userId={feed.data().userId}
+                userEmail={feed.data().userEmail}
+                userName={feed.data().userName}
+                userImg={feed.data().userImg}
+                feedId={feed.id}
+                feedImg={feed.data().feedImg}
+                feedCaption={feed.data().feedCaption}
+                timestamp={feed.data().timestamp}
+                handleDeleteFeed={handleDeleteFeed}
+              />
+            ))
+          ) : (
+            <>
+              {[...Array(5)].map((_, key) => (
+                <FeedSkeleton key={key} />
+              ))}
+            </>
+          )}
+          {loading && <FeedSkeleton />}
+          {feeds && !initialLoading && !hasMore && <CheckedEverything />}
+          {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
+        </div>
       )}
-      {loading && <FeedSkeleton />}
-      {feeds && !initialLoading && !hasMore && <CheckedEverything />}
-      {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
-    </div>
+    </>
   );
 }
 
