@@ -176,9 +176,7 @@ function NavBar() {
           </motion.nav>
           <WriteFeedModal boolean={openModal} handleCloseModal={handleCloseModal} />
         </div>
-      ) : (
-        <div style={{ width: `${navBarMargin}px` }} />
-      )}
+      ) : null}
     </>
   );
 }
