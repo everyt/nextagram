@@ -255,7 +255,7 @@ function Feed({
         </button>
         <input
           value={comment}
-          className='mt-2 h-4 w-[450px] outline-none'
+          className='mt-2 h-4 w-[450px] outline-none dark:bg-stone-700'
           onChange={(ev) => setComment(ev.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleUploadComment(e)}
           placeholder='댓글 달기...'
