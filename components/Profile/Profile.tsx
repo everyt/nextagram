@@ -124,7 +124,11 @@ export default function Profile({ id }: { id?: string }) {
                   </div>
                 </>
               )
-            ) : null}
+            ) : (
+              <div className='mt-1 h-[80px] w-[200px] text-sm'>
+                {user?.data()?.Introduction || ''}
+              </div>
+            )}
           </div>
         </div>
       </div>

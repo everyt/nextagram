@@ -69,8 +69,8 @@ function Miniprofile({
       )}
       <article className={`ml-3 flex flex-col text-[0.8rem] ${type !== 'onFeed' && 'mt-1'}`}>
         <span>
-          <b>{name}</b>&nbsp;•&nbsp;
-          {moment(new Date(timestamp?.seconds * 1000)).fromNow()}
+          <b>{name}</b>
+          {timestamp && ` • ${moment(new Date(timestamp?.seconds * 1000)).fromNow()}`}
         </span>
 
         <span>{email}</span>
