@@ -45,7 +45,7 @@ export default function Profile({ id }: { id?: string }) {
   }, [firestore]);
 
   useEffect(() => {
-    if (session?.user?.id) {
+    if (session?.user.id) {
       const unsubscribe = onSnapshot(doc(firestore, 'users', id || session.user.id), (snapshot) => {
         if (snapshot.exists()) {
           setUser(snapshot);
@@ -56,7 +56,7 @@ export default function Profile({ id }: { id?: string }) {
         unsubscribe();
       };
     }
-  }, [firestore, Introduction, session?.user?.id]);
+  }, [firestore, session?.user.id]);
 
   const handleUploadIntroduction = async (e: any) => {
     e.preventDefault();
@@ -90,7 +90,7 @@ export default function Profile({ id }: { id?: string }) {
         <div className='ml-[5em] mt-10 flex content-center'>
           <img
             className='h-[130px] w-[130px] rounded-full'
-            src={user?.data()?.image || session?.user.image}
+            src={user?.data().image || session?.user.image}
             alt=''
           />
           <motion.div
@@ -100,8 +100,8 @@ export default function Profile({ id }: { id?: string }) {
             transition={{ ease: 'easeInOut', duration: 0.35 }}
             className='ml-20 mt-2'
           >
-            <b>{user?.data()?.name || session?.user.name}</b>
-            <p>{user?.data()?.email || session?.user.email}</p>
+            <b>{user?.data().name || session?.user.name}</b>
+            <p>{user?.data().email || session?.user.email}</p>
             {session?.user.id === user?.id ? (
               editMode ? (
                 <>
@@ -133,7 +133,7 @@ export default function Profile({ id }: { id?: string }) {
               )
             ) : (
               <div className='mt-1 h-[80px] w-[200px] text-sm'>
-                {user?.data()?.Introduction || ''}
+                {user?.data().Introduction || ''}
               </div>
             )}
           </motion.div>
