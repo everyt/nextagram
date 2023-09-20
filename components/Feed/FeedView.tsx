@@ -1,6 +1,15 @@
-import { collection, limit, onSnapshot, orderBy, query, startAfter } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  startAfter,
+} from 'firebase/firestore';
 
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import { firestore } from '@/lib/firebase';
 
@@ -8,8 +17,9 @@ import CheckedEverything from './CheckedEverything';
 import Feed from './Feed';
 import FeedSkeleton from './FeedSkeleton';
 
-export default function FeedView() {
+function FeedView() {
   const [feeds, setFeeds] = useState<any[]>([]);
+  const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [lastTimestamp, setLastTimestamp] = useState<any>(null);
@@ -23,26 +33,26 @@ export default function FeedView() {
       let q;
 
       if (initialFetch) {
-        q = query(collection(firestore, 'posts'), orderBy('timestamp', 'desc'), limit(3));
+        q = query(collection(firestore, 'feeds'), orderBy('timestamp', 'desc'), limit(10));
       } else {
         q = query(
-          collection(firestore, 'posts'),
+          collection(firestore, 'feeds'),
           orderBy('timestamp', 'desc'),
           startAfter(lastTimestamp),
-          limit(1),
+          limit(10),
         );
       }
 
       const unsubscribe = onSnapshot(
         q,
-        (querySnapshot) => {
-          if (querySnapshot.empty) {
+        (snapshot) => {
+          if (snapshot.empty) {
             setHasMore(false);
           } else {
             setHasMore(true);
-            const newFeeds = querySnapshot.docs.map((doc) => doc.data());
-            const lastFeed = initialFetch ? newFeeds[newFeeds.length - 1] : newFeeds[0];
-            setLastTimestamp(lastFeed.timestamp);
+            const newFeeds = snapshot.docs;
+            const lastFeed = newFeeds.length > 0 ? newFeeds[newFeeds.length - 1] : newFeeds[0];
+            setLastTimestamp(lastFeed.data().timestamp);
             setFeeds((prev) => (initialFetch ? newFeeds : [...prev, ...newFeeds]));
           }
         },
@@ -62,6 +72,11 @@ export default function FeedView() {
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      setInitialLoading(false);
+      const div = document.querySelector('.loading');
+      div?.classList.remove('hidden');
+    }, 300);
     fetchFeeds(true); // 페이지가 처음 로드될 때 호출
   }, []);
 
@@ -75,7 +90,7 @@ export default function FeedView() {
         },
         {
           root: null, // Use the viewport as the root
-          rootMargin: '0px', // No additional margin
+          rootMargin: '20px', // No additional margin
           threshold: 0.1, // Trigger when 10% of the target is visible
         },
       );
@@ -95,32 +110,42 @@ export default function FeedView() {
     }
   }, [hasMore, loading]);
 
+  const handleDeleteFeed = async (feedId: string) => {
+    const feedRef = doc(firestore, 'feeds', feedId!);
+    await deleteDoc(feedRef);
+  };
+
   return (
-    <div className='pb-10'>
-      {feeds ? (
-        feeds.map((feed, key) => (
-          <Feed
-            key={key}
-            email={feed.userEmail}
-            name={feed.userName}
-            img={feed.userImg}
-            feedId={feed.id}
-            feedImg={feed.image}
-            feedCaption={feed.caption}
-            likes={feed.feedLikes}
-            comments={feed.feedComments}
-          />
-        ))
-      ) : (
-        <>
-          {[...Array(5)].map((_, key) => (
-            <FeedSkeleton key={key} />
-          ))}
-        </>
-      )}
-      {loading && <FeedSkeleton />}
-      {hasMore && <div className='load-more-trigger' />}
-      {!hasMore && <CheckedEverything />}
+    <div className='loading hidden'>
+      <div className='flex flex-col justify-start pb-10'>
+        {feeds ? (
+          feeds.map((feed, key) => (
+            <Feed
+              key={key}
+              userId={feed.data().userId}
+              userEmail={feed.data().userEmail}
+              userName={feed.data().userName}
+              userImg={feed.data().userImg}
+              feedId={feed.id}
+              feedImg={feed.data().feedImg}
+              feedCaption={feed.data().feedCaption}
+              timestamp={feed.data().timestamp}
+              handleDeleteFeed={handleDeleteFeed}
+            />
+          ))
+        ) : (
+          <>
+            {[...Array(5)].map((_, key) => (
+              <FeedSkeleton key={key} />
+            ))}
+          </>
+        )}
+        {loading && <FeedSkeleton />}
+        {feeds && !initialLoading && !hasMore && <CheckedEverything />}
+        {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
+      </div>
     </div>
   );
 }
+
+export default memo(FeedView);

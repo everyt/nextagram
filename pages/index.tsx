@@ -4,7 +4,7 @@ import FooterBar from '@/components/FooterBar/FooterBar';
 export default function Home() {
   return (
     <>
-      <div className='flex flex-col justify-start'>
+      <div>
         <FeedView />
       </div>
       <div>

@@ -1,2 +1,13 @@
 /** @type {import('next').NextConfig} */
-module.exports = {};
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+};

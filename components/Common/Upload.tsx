@@ -3,7 +3,6 @@ type inputProps = {
   className: string;
   handleInputFile: (ev: React.ChangeEvent<HTMLInputElement>) => void;
 };
-
 type divProps = {
   children: React.ReactNode;
   className: string;
@@ -18,8 +17,6 @@ const div = ({ children, className, handleDropFile, handleDragOver }: divProps) 
     </div>
   );
 };
-type divType = { div: typeof div };
-
 const input = ({ children, className, handleInputFile }: inputProps) => {
   return (
     <>
@@ -30,6 +27,8 @@ const input = ({ children, className, handleInputFile }: inputProps) => {
     </>
   );
 };
+
+type divType = { div: typeof div };
 type inputType = { input: typeof input };
 
 const Upload: divType & inputType = ({ children }: { children: React.ReactNode }) => {
