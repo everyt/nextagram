@@ -8,6 +8,7 @@ import { firestore } from '@/lib/firebase';
 import MiniprofileSkeleton from '../Miniprofile/MiniprofileSkeleton';
 
 type User = {
+  userId: string;
   email: string;
   image: string;
   name: string;
@@ -56,6 +57,7 @@ function Suggestion() {
             email={user.email || '@kakao'}
             name={user.name}
             img={user.image}
+            userId={user.userId}
             type='onSidebar'
           />
         ))
