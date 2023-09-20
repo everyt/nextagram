@@ -30,7 +30,10 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    session: async ({ session, token, user }) => {
+    jwt: async ({ token }) => {
+      return token;
+    },
+    session: async ({ session, user }) => {
       if (session?.user) {
         session.user.id = user.id;
       }

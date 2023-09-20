@@ -33,6 +33,7 @@ type Props = {
   feedId: string;
   feedImg: string;
   feedCaption: string;
+  timestamp: any;
   handleDeleteFeed: (feedId: string) => void;
 };
 
@@ -44,6 +45,7 @@ function Feed({
   feedId,
   feedImg,
   feedCaption,
+  timestamp,
   handleDeleteFeed,
 }: Props) {
   const { data: session } = useSession();
@@ -62,9 +64,9 @@ function Feed({
       try {
         await addDoc(collection(firestore, 'feeds', feedId, 'comments'), {
           comment,
-          userId: session?.user?.id,
-          userName: session?.user?.name,
-          userImg: session?.user?.image,
+          userId: session?.user.id,
+          userName: session?.user.name,
+          userImg: session?.user.image,
           timestamp: serverTimestamp(),
         });
 
@@ -113,17 +115,17 @@ function Feed({
   }, [firestore, feedId]);
 
   useEffect(
-    () => setHasLikes(likes.findIndex((like) => like.id === session?.user?.id) !== -1),
+    () => setHasLikes(likes.findIndex((like) => like.id === session?.user.id) !== -1),
     [likes],
   );
 
   const handleClickLike = async () => {
     try {
       if (hasLikes) {
-        await deleteDoc(doc(firestore, 'feeds', feedId, 'likes', session?.user?.id));
+        await deleteDoc(doc(firestore, 'feeds', feedId, 'likes', session?.user.id));
       } else {
-        await setDoc(doc(firestore, 'feeds', feedId, 'likes', session?.user?.id), {
-          userName: session?.user?.name,
+        await setDoc(doc(firestore, 'feeds', feedId, 'likes', session?.user.id), {
+          userName: session?.user.name,
         });
       }
     } catch (error) {
@@ -148,6 +150,7 @@ function Feed({
           type='onFeed'
           userId={userId}
           feedId={feedId}
+          timestamp={timestamp}
           handleDeleteFeed={handleDeleteFeed}
         />
       </article>
@@ -180,22 +183,27 @@ function Feed({
 
       <article className='text-[0.88rem]'>
         <b>좋아요 {likes.length}개</b>
-        <div className='my-2 flex content-center'>
-          <b className='mr-2 text-[0.9rem]'>{userName}</b>
-          <p>{feedCaption}</p>
-        </div>
+      </article>
+
+      <article className='my-2 flex content-center text-[0.88rem]'>
+        <b className='mr-2 text-[0.9rem]'>{userName}</b>
+        <p>{feedCaption}</p>
+      </article>
+
+      <article className='text-[0.88rem]'>
         <div className='flex content-center text-stone-500'>
           <p>댓글 {comments.length}개 </p>
           <div className='cursor-pointer' onClick={handleOpenComment}>
             &nbsp;{comments.length > 0 ? (openComments ? '닫기' : '모두 보기') : null}
           </div>
         </div>
+
         {comments &&
           !openComments &&
           comments.map(
             (comment, index) =>
               index === 0 && (
-                <div className='mb-2 mt-2 flex items-center'>
+                <div className='mb-2 mt-2 flex items-center' key={index}>
                   <div className='flex-1 content-center'>
                     <b>{comment.data().userName} </b>
                     &nbsp;{comment.data().comment}
@@ -206,6 +214,7 @@ function Feed({
                 </div>
               ),
           )}
+
         {openComments && (
           <div className='mt-3 w-[450px] bg-stone-50 pb-[1px]'>
             {comments &&
@@ -231,6 +240,7 @@ function Feed({
               ))}
           </div>
         )}
+
         <button className='absolute ml-[27rem] mt-[0.35rem]'>
           {loading ? (
             <Icon icon='line-md:uploading-loop' style={{ fontSize: '16px' }} />

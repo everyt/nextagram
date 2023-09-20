@@ -18,7 +18,7 @@ function DropDown({
       : setDarkmodeSVG(false);
   };
   const handleLogout = () => {
-    signOut();
+    signOut({ callbackUrl: '/login' });
   };
   return (
     <div

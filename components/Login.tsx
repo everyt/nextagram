@@ -23,10 +23,10 @@ export default function Login() {
       </div>
       <div className='flex h-[70px] flex-row justify-center'>
         {[
-          [0, 'naver', () => signIn('naver')],
-          [1, 'kakao', () => signIn('kakao')],
-          [2, 'google', () => signIn('google')],
-          [3, 'github', () => signIn('github')],
+          [0, 'naver', () => signIn('naver', { callbackUrl: '/' })],
+          [1, 'kakao', () => signIn('kakao', { callbackUrl: '/' })],
+          [2, 'google', () => signIn('google', { callbackUrl: '/' })],
+          [3, 'github', () => signIn('github', { callbackUrl: '/' })],
         ].map(([key, brand, func]) => (
           <button
             key={key as number}

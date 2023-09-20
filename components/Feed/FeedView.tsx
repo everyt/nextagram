@@ -45,12 +45,12 @@ function FeedView() {
 
       const unsubscribe = onSnapshot(
         q,
-        (querySnapshot) => {
-          if (querySnapshot.empty) {
+        (snapshot) => {
+          if (snapshot.empty) {
             setHasMore(false);
           } else {
             setHasMore(true);
-            const newFeeds = querySnapshot.docs;
+            const newFeeds = snapshot.docs;
             const lastFeed = newFeeds.length > 0 ? newFeeds[newFeeds.length - 1] : newFeeds[0];
             setLastTimestamp(lastFeed.data().timestamp);
             setFeeds((prev) => (initialFetch ? newFeeds : [...prev, ...newFeeds]));
@@ -76,7 +76,7 @@ function FeedView() {
 
     setTimeout(() => {
       setInitialLoading(false);
-    }, 500);
+    }, 300);
   }, []);
 
   useEffect(() => {
@@ -127,6 +127,7 @@ function FeedView() {
             feedId={feed.id}
             feedImg={feed.data().feedImg}
             feedCaption={feed.data().feedCaption}
+            timestamp={feed.data().timestamp}
             handleDeleteFeed={handleDeleteFeed}
           />
         ))

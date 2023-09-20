@@ -42,7 +42,7 @@ function NavBar() {
 
     setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 300);
   }, []);
 
   useEffect(() => {

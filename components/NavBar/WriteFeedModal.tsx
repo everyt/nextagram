@@ -131,7 +131,7 @@ export default function WriteFeedModal({ boolean, handleCloseModal }: WFModalPro
                 <Icon icon='iconoir:post' style={{ fontSize: '150px' }} className='mb-16 mt-8' />
                 <article className='flex flex-row'>
                   <textarea
-                    className='h-[150px] w-[300px] cursor-pointer resize-none rounded-2xl border-2 p-4 text-center outline-none'
+                    className='h-[150px] w-[300px] resize-none overflow-hidden rounded-2xl border-0 bg-stone-50 p-4 text-center outline-none'
                     onChange={(ev) => setFeedCaption(ev.target.value)}
                     placeholder='감정을 공유하세요'
                   />

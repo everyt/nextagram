@@ -1,9 +1,11 @@
-import { collection, doc, getDocs, limit, orderBy, query, setDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 
 import { memo, useEffect, useState } from 'react';
 
 import Miniprofile from '@/components/Miniprofile/Miniprofile';
 import { firestore } from '@/lib/firebase';
+
+import MiniprofileSkeleton from '../Miniprofile/MiniprofileSkeleton';
 
 type User = {
   email: string;
@@ -47,15 +49,23 @@ function Suggestion() {
 
   return (
     <div>
-      {users.map((user, key) => (
-        <Miniprofile
-          key={key}
-          email={user.email}
-          name={user.name}
-          img={user.image}
-          type='onSidebar'
-        />
-      ))}
+      {users ? (
+        users.map((user, key) => (
+          <Miniprofile
+            key={key}
+            email={user.email}
+            name={user.name}
+            img={user.image}
+            type='onSidebar'
+          />
+        ))
+      ) : (
+        <>
+          {[...Array(5)].map((_, key) => (
+            <MiniprofileSkeleton key={key} type='onSidebar' />
+          ))}
+        </>
+      )}
     </div>
   );
 }

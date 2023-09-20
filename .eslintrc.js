@@ -73,6 +73,7 @@ module.exports = {
     "no-await-in-loop": 0,
     "no-nested-ternary": 0,
     "no-unsafe-optional-chaining": 0,
-    "no-bitwise": 0
+    "no-bitwise": 0,
+    "no-restricted-exports": 0
   }
 }
