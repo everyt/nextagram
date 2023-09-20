@@ -37,6 +37,9 @@ export default NextAuth({
       if (session?.user) {
         session.user.id = user.id;
       }
+      if (!session?.user.email) {
+        session.user.email = '@kakao';
+      }
       return session;
     },
   },
