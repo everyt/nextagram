@@ -118,33 +118,46 @@ export default function WriteFeedModal({ boolean, handleCloseModal }: WFModalPro
             <article className='text-blue-400'>{syncStatusMessage}</article>
           ) : (
             <>
-              <Icon icon='iconoir:post' style={{ fontSize: '150px' }} className='mb-16 mt-8' />
-              <article className='flex flex-row'>
-                <textarea
-                  className='h-[150px] w-[300px] cursor-pointer resize-none rounded-2xl border-2 p-4 text-center outline-none'
-                  onChange={(ev) => setFeedCaption(ev.target.value)}
-                  placeholder='감정을 공유하세요'
-                />
-                <div className='ml-16 mt-8 flex flex-col'>
-                  <p className='mb-4'>사진을 여기에 끌어다 놓으세요</p>
-                  {selectedFile ? (
-                    <button
-                      onClick={handleUploadFeed}
-                      className='rounded-lg bg-blue-500 p-2 px-4 text-start text-sm text-white'
-                    >
-                      공유하기
-                    </button>
-                  ) : (
-                    <Upload.input
-                      className='flex cursor-pointer content-center rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
-                      handleInputFile={handleInputSelectedFile}
-                    >
-                      <Icon icon='system-uicons:file-upload' style={{ fontSize: '24px' }} />
-                      <p className='ml-3'>컴퓨터에서 선택</p>
-                    </Upload.input>
-                  )}
+              {selectedFile && (
+                <div className='absolute h-[485px] w-[700px]'>
+                  <img
+                    className='z-0 h-full w-full overflow-hidden object-cover'
+                    src={selectedFile}
+                    alt='selectedFile'
+                  />
                 </div>
-              </article>
+              )}
+              <div className='z-10 flex flex-col items-center justify-center'>
+                <Icon icon='iconoir:post' style={{ fontSize: '150px' }} className='mb-16 mt-8' />
+                <article className='flex flex-row'>
+                  <textarea
+                    className='h-[150px] w-[300px] cursor-pointer resize-none rounded-2xl border-2 p-4 text-center outline-none'
+                    onChange={(ev) => setFeedCaption(ev.target.value)}
+                    placeholder='감정을 공유하세요'
+                  />
+                  <div className='ml-16 mt-8 flex flex-col'>
+                    <p className={`mb-4 ${selectedFile && 'text-transparent'}`}>
+                      사진을 여기에 끌어다 놓으세요
+                    </p>
+                    {selectedFile ? (
+                      <button
+                        onClick={handleUploadFeed}
+                        className='rounded-lg bg-blue-500 p-2 px-4 text-start text-sm text-white'
+                      >
+                        공유하기
+                      </button>
+                    ) : (
+                      <Upload.input
+                        className='flex cursor-pointer content-center rounded-lg bg-blue-500 p-2 px-4 text-sm text-white'
+                        handleInputFile={handleInputSelectedFile}
+                      >
+                        <Icon icon='system-uicons:file-upload' style={{ fontSize: '24px' }} />
+                        <p className='ml-3'>컴퓨터에서 선택</p>
+                      </Upload.input>
+                    )}
+                  </div>
+                </article>
+              </div>
             </>
           )}
         </section>

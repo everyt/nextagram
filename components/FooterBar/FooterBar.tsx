@@ -8,9 +8,9 @@ import Miniprofile from '@/components/Miniprofile/Miniprofile';
 function FooterBar() {
   const [isLoading, setIsLoading] = useState(true);
   const { data: session } = useSession();
+  const [width, setWidth] = useState<number>(1100);
 
-  const isClient = typeof window !== 'undefined';
-  const [width, setWidth] = useState<number>(isClient ? window.innerWidth : 0);
+  const isClient = typeof window !== undefined;
 
   const handleWindowResize = () => {
     if (isClient) {

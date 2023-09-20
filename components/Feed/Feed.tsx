@@ -154,7 +154,7 @@ function Feed({
 
       <article>
         <Image
-          className='mt-[0.8rem] w-[inherit]'
+          className='mt-[0.8rem] w-[450px]'
           src={feedImg}
           alt='feed'
           width={450}
@@ -192,17 +192,20 @@ function Feed({
         </div>
         {comments &&
           !openComments &&
-          comments.map((comment) => (
-            <div key={comment.id} className='mb-2 mt-2 flex items-center'>
-              <div className='flex-1 content-center'>
-                <b>{comment.data().userName} </b>
-                &nbsp;{comment.data().comment}
-              </div>
-              <p className='pr-1 text-xs'>
-                {moment(new Date(comment.data().timestamp?.seconds * 1000)).fromNow()}
-              </p>
-            </div>
-          ))}
+          comments.map(
+            (comment, index) =>
+              index === 0 && (
+                <div className='mb-2 mt-2 flex items-center'>
+                  <div className='flex-1 content-center'>
+                    <b>{comment.data().userName} </b>
+                    &nbsp;{comment.data().comment}
+                  </div>
+                  <p className='pr-1 text-xs'>
+                    {moment(new Date(comment.data().timestamp?.seconds * 1000)).fromNow()}
+                  </p>
+                </div>
+              ),
+          )}
         {openComments && (
           <div className='mt-3 w-[450px] bg-stone-50 pb-[1px]'>
             {comments &&
