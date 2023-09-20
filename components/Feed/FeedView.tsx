@@ -75,7 +75,7 @@ function FeedView() {
     setTimeout(() => {
       setInitialLoading(false);
     }, 300);
-  }, [initialLoading]);
+  }, []);
 
   useEffect(() => {
     fetchFeeds(true); // 페이지가 처음 로드될 때 호출

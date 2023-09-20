@@ -38,7 +38,7 @@ function FooterBar() {
     setTimeout(() => {
       setIsLoading(false);
     }, 300);
-  }, [isLoading]);
+  }, []);
 
   useEffect(() => {
     handleWindowResize();

@@ -41,7 +41,7 @@ function NavBar() {
     setTimeout(() => {
       setIsLoading(false);
     }, 300);
-  }, [isLoading]);
+  }, []);
 
   useEffect(() => {
     getInitialWidth();
