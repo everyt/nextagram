@@ -57,7 +57,6 @@ export default function WriteFeedModal({ boolean, handleCloseModal }: WFModalPro
     setIsSyncing(true);
 
     try {
-      console.table(session);
       const feedRef = await addDoc(collection(firestore, 'feeds'), {
         userId: session?.user.id,
         userEmail: session?.user.email,
