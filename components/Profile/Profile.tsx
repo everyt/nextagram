@@ -45,8 +45,9 @@ export default function Profile({ id }: { id?: string }) {
   }, [firestore]);
 
   useEffect(() => {
-    if (session?.user.id) {
-      const unsubscribe = onSnapshot(doc(firestore, 'users', id || session.user.id), (snapshot) => {
+    if (session?.user.id || id) {
+      const userId = id || session?.user.id;
+      const unsubscribe = onSnapshot(doc(firestore, 'users', userId), (snapshot) => {
         if (snapshot.exists()) {
           setUser(snapshot);
         }
@@ -56,7 +57,7 @@ export default function Profile({ id }: { id?: string }) {
         unsubscribe();
       };
     }
-  }, [firestore, session?.user.id]);
+  }, [firestore, id, session?.user.id]);
 
   const handleUploadIntroduction = async (e: any) => {
     e.preventDefault();
