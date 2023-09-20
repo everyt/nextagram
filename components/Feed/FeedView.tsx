@@ -74,15 +74,14 @@ function FeedView() {
   useEffect(() => {
     setTimeout(() => {
       setInitialLoading(false);
+      const div = document.querySelector('.loading');
+      div?.classList.remove('hidden');
     }, 300);
-  }, []);
-
-  useEffect(() => {
     fetchFeeds(true); // 페이지가 처음 로드될 때 호출
   }, []);
 
   useEffect(() => {
-    if (hasMore && !loading && !initialLoading) {
+    if (hasMore && !loading) {
       observer.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting) {
@@ -117,37 +116,35 @@ function FeedView() {
   };
 
   return (
-    <>
-      {!initialLoading && (
-        <div className='flex flex-col justify-start pb-10'>
-          {feeds ? (
-            feeds.map((feed, key) => (
-              <Feed
-                key={key}
-                userId={feed.data().userId}
-                userEmail={feed.data().userEmail}
-                userName={feed.data().userName}
-                userImg={feed.data().userImg}
-                feedId={feed.id}
-                feedImg={feed.data().feedImg}
-                feedCaption={feed.data().feedCaption}
-                timestamp={feed.data().timestamp}
-                handleDeleteFeed={handleDeleteFeed}
-              />
-            ))
-          ) : (
-            <>
-              {[...Array(5)].map((_, key) => (
-                <FeedSkeleton key={key} />
-              ))}
-            </>
-          )}
-          {loading && <FeedSkeleton />}
-          {feeds && !initialLoading && !hasMore && <CheckedEverything />}
-          {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
-        </div>
-      )}
-    </>
+    <div className='loading hidden'>
+      <div className='flex flex-col justify-start pb-10'>
+        {feeds ? (
+          feeds.map((feed, key) => (
+            <Feed
+              key={key}
+              userId={feed.data().userId}
+              userEmail={feed.data().userEmail}
+              userName={feed.data().userName}
+              userImg={feed.data().userImg}
+              feedId={feed.id}
+              feedImg={feed.data().feedImg}
+              feedCaption={feed.data().feedCaption}
+              timestamp={feed.data().timestamp}
+              handleDeleteFeed={handleDeleteFeed}
+            />
+          ))
+        ) : (
+          <>
+            {[...Array(5)].map((_, key) => (
+              <FeedSkeleton key={key} />
+            ))}
+          </>
+        )}
+        {loading && <FeedSkeleton />}
+        {feeds && !initialLoading && !hasMore && <CheckedEverything />}
+        {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
+      </div>
+    </div>
   );
 }
 
