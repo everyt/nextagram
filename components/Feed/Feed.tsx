@@ -191,7 +191,7 @@ function Feed({
       </article>
 
       <article className='text-[0.88rem]'>
-        <div className='flex content-center text-stone-500'>
+        <div className='flex content-center text-stone-500 dark:text-stone-200'>
           <p>댓글 {comments.length}개 </p>
           <div className='cursor-pointer' onClick={handleOpenComment}>
             &nbsp;{comments.length > 0 ? (openComments ? '닫기' : '모두 보기') : null}
@@ -255,7 +255,7 @@ function Feed({
         </button>
         <input
           value={comment}
-          className='mt-2 h-4 w-[450px] outline-none dark:bg-stone-700'
+          className='mt-2 h-4 w-[450px] bg-stone-50 outline-none dark:bg-stone-700'
           onChange={(ev) => setComment(ev.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleUploadComment(e)}
           placeholder='댓글 달기...'
