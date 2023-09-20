@@ -1,11 +1,4 @@
-import {
-  collection,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  startAfter,
-} from 'firebase/firestore';
+import { collection, limit, onSnapshot, orderBy, query, startAfter } from 'firebase/firestore';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -18,18 +11,27 @@ import FeedSkeleton from './FeedSkeleton';
 export default function FeedView() {
   const [feeds, setFeeds] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [lastTimestamp, setLastTimestamp] = useState<any>(null);
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const fetchFirstFeed = async () => {
+  const fetchFeeds = async (initialFetch = false) => {
     try {
       setLoading(true);
+      setHasMore(false);
 
-      const q = query(
-        collection(firestore, 'posts'),
-        orderBy('timestamp', 'desc'),
-        limit(5), // 첫 번째 페이지의 경우 startAfter 없이 limit만 사용
-      );
+      let q;
+
+      if (initialFetch) {
+        q = query(collection(firestore, 'posts'), orderBy('timestamp', 'desc'), limit(3));
+      } else {
+        q = query(
+          collection(firestore, 'posts'),
+          orderBy('timestamp', 'desc'),
+          startAfter(lastTimestamp),
+          limit(1),
+        );
+      }
 
       const unsubscribe = onSnapshot(
         q,
@@ -37,45 +39,11 @@ export default function FeedView() {
           if (querySnapshot.empty) {
             setHasMore(false);
           } else {
+            setHasMore(true);
             const newFeeds = querySnapshot.docs.map((doc) => doc.data());
-            setFeeds(newFeeds);
-          }
-        },
-        (error) => {
-          console.error(error);
-        },
-      );
-
-      return () => {
-        unsubscribe();
-      };
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchFeeds = async () => {
-    try {
-      setLoading(true);
-      const lastFeed = feeds[feeds.length - 1];
-
-      const q = query(
-        collection(firestore, 'posts'),
-        orderBy('timestamp', 'desc'),
-        startAfter(lastFeed.timestamp),
-        limit(5), // Adjust the limit as needed
-      );
-
-      const unsubscribe = onSnapshot(
-        q,
-        (querySnapshot) => {
-          if (querySnapshot.empty) {
-            setHasMore(false);
-          } else {
-            const newFeeds = querySnapshot.docs.map((doc) => doc.data());
-            setFeeds((prevFeeds) => [...prevFeeds, ...newFeeds]);
+            const lastFeed = initialFetch ? newFeeds[newFeeds.length - 1] : newFeeds[0];
+            setLastTimestamp(lastFeed.timestamp);
+            setFeeds((prev) => (initialFetch ? newFeeds : [...prev, ...newFeeds]));
           }
         },
         (error) => {
@@ -94,7 +62,7 @@ export default function FeedView() {
   };
 
   useEffect(() => {
-    fetchFirstFeed();
+    fetchFeeds(true); // 페이지가 처음 로드될 때 호출
   }, []);
 
   useEffect(() => {
@@ -112,20 +80,23 @@ export default function FeedView() {
         },
       );
 
-      if (observer.current) {
-        observer.current.observe(document.querySelector('.load-more-trigger')!);
+      // 초기 데이터를 가져온 후에 옵저버 활성화
+      if (hasMore) {
+        if (observer.current) {
+          observer.current.observe(document.querySelector('.load-more-trigger')!);
+        }
       }
-    }
 
-    return () => {
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-    };
+      return () => {
+        if (observer.current) {
+          observer.current.disconnect();
+        }
+      };
+    }
   }, [hasMore, loading]);
 
   return (
-    <div>
+    <div className='pb-10'>
       {feeds ? (
         feeds.map((feed, key) => (
           <Feed

@@ -1,12 +1,4 @@
-import {
-  collection,
-  doc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  setDoc,
-} from 'firebase/firestore';
+import { collection, doc, getDocs, limit, orderBy, query, setDoc } from 'firebase/firestore';
 
 import { memo, useEffect, useState } from 'react';
 
@@ -54,6 +46,7 @@ function Suggestion() {
         const querySnapshotRandom = await getDocs(
           query(usersCollection, orderBy('randomOrder'), limit(5)),
         );
+        console.log('Query Snapshot Random:', querySnapshotRandom);
 
         const randomUsersData: User[] = [];
 

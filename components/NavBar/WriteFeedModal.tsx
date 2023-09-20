@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useSession } from 'next-auth/react';
 
@@ -17,23 +17,28 @@ type WFModalProps = {
   setBoolean: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const syncStatusDescript: { [key: number]: string } = {
-  0: '작성해주신 피드를 열심히 업로드 중이에요!',
-  1: '업로드에 실패했어요.',
-  2: '이미지가 업로드되지 않았어요.',
-  3: '피드를 작성했어요.',
-};
-
 export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
+  const [prevScrollY, setPrevScrollY] = useState<number | null>(null);
+
   const { data: session } = useSession();
 
   const [syncStatus, setSyncStatus] = useState<number>(0);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [isShowSyncStatus, setIsShowSyncStatus] = useState<boolean>(false);
 
-  const [feedCaption, setFeedCaption] = useState<string>('');
+  const syncStatusDescript: { [key: number]: string } = useMemo(
+    () => ({
+      0: '작성해주신 피드를 열심히 업로드 중이에요!',
+      1: '업로드에 실패했어요.',
+      2: '이미지가 업로드되지 않았어요.',
+      3: '피드를 작성했어요.',
+    }),
+    [],
+  );
 
-  const ALLOWED_IMAGEEXTENSION = ['PNG', 'JPG', 'JPEG', 'WEBP', 'AVIF', 'GIF'];
+  const ALLOWED_IMAGEEXTENSION = useMemo(() => ['PNG', 'JPG', 'JPEG', 'WEBP', 'AVIF', 'GIF'], []);
+
+  const [feedCaption, setFeedCaption] = useState<string>('');
   const {
     selectedFile,
     handleInputSelectedFile,
@@ -43,11 +48,15 @@ export default function WriteFeedModal({ boolean, setBoolean }: WFModalProps) {
   } = useSelectedFile(ALLOWED_IMAGEEXTENSION);
 
   useEffect(() => {
-    const prevScrollY = preventScroll();
-    return () => {
+    if (boolean) {
+      // 모달이 열릴 때 스크롤을 방지하고 현재 위치를 저장
+      setPrevScrollY(preventScroll());
+    } else if (prevScrollY !== null) {
+      // 모달이 닫힐 때 스크롤을 복원
       allowScroll(prevScrollY);
-    };
-  }, []);
+      setPrevScrollY(null);
+    }
+  }, [boolean, prevScrollY]);
 
   const setCloseModal = () => {
     setBoolean(false);

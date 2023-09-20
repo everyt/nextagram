@@ -17,16 +17,7 @@ type Props = {
   comments: number;
 };
 
-function Feed({
-  email,
-  name,
-  img,
-  feedId,
-  feedImg,
-  feedCaption,
-  likes,
-  comments,
-}: Props) {
+function Feed({ email, name, img, feedId, feedImg, feedCaption, likes, comments }: Props) {
   const memorizedEmail = useMemo(() => email, [email]);
   const memorizedName = useMemo(() => name, [name]);
   const memorizedImg = useMemo(() => img, [img]);
@@ -34,12 +25,7 @@ function Feed({
   return (
     <section className='mt-1 h-auto w-[450px] border-b-[1px] border-stone-300 pb-4'>
       <article>
-        <Miniprofile
-          email={memorizedEmail}
-          name={memorizedName}
-          img={memorizedImg}
-          type='onFeed'
-        />
+        <Miniprofile email={memorizedEmail} name={memorizedName} img={memorizedImg} type='onFeed' />
       </article>
 
       <article>
@@ -50,22 +36,18 @@ function Feed({
         <button className='cursor-pointer'>
           <Icon icon='ion:heart-outline' style={{ fontSize: '26px' }} />
         </button>
-        <Icon
-          className='ml-4'
-          icon='ion:paper-plane-outline'
-          style={{ fontSize: '26px' }}
-        />
+        <Icon className='ml-4' icon='ion:paper-plane-outline' style={{ fontSize: '26px' }} />
         <Icon className='ml-4' icon='uil:comment' style={{ fontSize: '26px' }} />
       </article>
 
       <article>
-        <p className='pt-[0.8rem] text-[0.92rem]'>{`좋아요 ${likes}개`}</p>
-        <p className='my-2 text-[0.88rem]'>
+        <div className='pt-[0.8rem] text-[0.92rem]'>{`좋아요 ${likes}개`}</div>
+        <div className='my-2 text-[0.88rem]'>
           {name} {feedCaption}
-        </p>
-        <p className='text-[0.9rem]'>
+        </div>
+        <div className='text-[0.9rem]'>
           {`댓글 ${comments}개`} <p>모두 보기</p>
-        </p>
+        </div>
       </article>
     </section>
   );

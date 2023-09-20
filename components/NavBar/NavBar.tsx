@@ -11,30 +11,29 @@ import DropDown from './DropDown';
 import NavBarButton from './NavBarButton';
 import WriteFeedModal from './WriteFeedModal';
 
-const Icons = useMemo(
-  () => [
-    ['mingcute:home-4-line', 'mingcute:home-4-fill'],
-    ['mdi:compass-outline', 'eos-icons:compass'],
-    ['iconamoon:search', 'iconamoon:search-bold'],
-    ['solar:video-frame-play-horizontal-outline', 'solar:video-frame-play-horizontal-bold'],
-    ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
-    ['ion:heart-outline', 'ion:heart'],
-    ['jam:write', 'jam:write-f'],
-    ['iconamoon:profile-circle-light', 'iconamoon:profile-circle-fill'],
-    ['ph:list', 'ph:list-bold'],
-  ],
-  [],
-);
-
-const variants = useMemo(
-  () => ({
-    hide: { opacity: [1], scale: [0, 1] },
-    show: { opacity: [0, 1], scale: [1] },
-  }),
-  [],
-);
-
 export default function NavBar() {
+  const Icons = useMemo(
+    () => [
+      ['mingcute:home-4-line', 'mingcute:home-4-fill'],
+      ['mdi:compass-outline', 'eos-icons:compass'],
+      ['iconamoon:search', 'iconamoon:search-bold'],
+      ['solar:video-frame-play-horizontal-outline', 'solar:video-frame-play-horizontal-bold'],
+      ['ion:paper-plane-outline', 'ion:paper-plane-sharp'],
+      ['ion:heart-outline', 'ion:heart'],
+      ['jam:write', 'jam:write-f'],
+      ['iconamoon:profile-circle-light', 'iconamoon:profile-circle-fill'],
+      ['ph:list', 'ph:list-bold'],
+    ],
+    [],
+  );
+
+  const variants = useMemo(
+    () => ({
+      hide: { opacity: [1], scale: [0, 1] },
+      show: { opacity: [0, 1], scale: [1] },
+    }),
+    [],
+  );
   const windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
   const [width, setWidth] = useState<number>(182);
   const [dropdownWidth, setDropdownWidth] = useState<number>(140);
