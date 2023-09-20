@@ -50,15 +50,18 @@ export default function Profile({ id }: { id?: string }) {
 
   useEffect(() => {
     if (session?.user.id) {
-      const unsubscribe = onSnapshot(doc(firestore, 'users', id || session.user.id), (snapshot) => {
-        if (snapshot.exists()) {
-          setUser(snapshot);
-        }
-      });
+      const unsubscribe = onSnapshot(
+        doc(firestore, 'users', id || session?.user.id),
+        (snapshot) => {
+          if (snapshot.exists()) {
+            setUser(snapshot);
+          }
+        },
+      );
 
-      setUserName(user.data().name || session.user.name);
-      setUserEmail(user.data().email || session.user.email);
-      setUserImg(user.data().image || session.user.image);
+      setUserName(user?.data().name || session?.user.name);
+      setUserEmail(user?.data().email || session?.user.email);
+      setUserImg(user?.data().image || session?.user.image);
 
       return () => {
         unsubscribe();
