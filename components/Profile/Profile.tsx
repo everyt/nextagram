@@ -112,7 +112,7 @@ export default function Profile({ id }: { id?: string }) {
                     <Icon icon='ph:x-light' onClick={handleToggleEditMode} />
                   </button>
                   <textarea
-                    className='mt-1 h-[80px] w-[200px] resize-none border-0 bg-stone-50 text-start text-sm outline-none'
+                    className='mt-1 h-[80px] w-[200px] resize-none border-0 bg-stone-50 text-start text-sm outline-none dark:bg-stone-700'
                     onChange={(ev) => setIntroduction(ev.target.value)}
                     placeholder='자기소개를 입력해 보세요.'
                     onKeyDown={(ev) => {
@@ -140,7 +140,7 @@ export default function Profile({ id }: { id?: string }) {
         </div>
       </div>
       <div className='absolute top-50 ml-16 flex h-[40px] w-screen justify-center'>
-        <div className='flex content-center border-t-2 border-black pt-3'>
+        <div className='flex content-center border-t-2 border-black pt-3 dark:border-white'>
           <Icon className='mt-1 text-sm' icon='ion:grid-outline' />
           <div className='ml-2 text-sm'>
             <b>게시물</b>

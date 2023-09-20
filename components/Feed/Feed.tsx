@@ -216,7 +216,7 @@ function Feed({
           )}
 
         {openComments && (
-          <div className='mt-3 w-[450px] bg-stone-50 pb-[1px]'>
+          <div className='mt-3 w-[450px] bg-stone-50 pb-[1px] dark:bg-stone-700'>
             {comments &&
               comments.map((comment) => (
                 <div key={comment.id} className='mb-3 flex items-center space-x-2'>

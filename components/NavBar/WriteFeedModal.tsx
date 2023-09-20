@@ -101,7 +101,7 @@ export default function WriteFeedModal({ boolean, handleCloseModal }: WFModalPro
 
   return (
     <Modal
-      className='h-[530px] w-[700px] rounded-2xl bg-white'
+      className='h-[530px] w-[700px] rounded-2xl bg-white dark:bg-stone-800'
       boolean={boolean}
       handleClose={handleCloseModalCallback}
     >
@@ -115,7 +115,7 @@ export default function WriteFeedModal({ boolean, handleCloseModal }: WFModalPro
         </header>
         <section className='flex h-[485px] flex-col items-center justify-center'>
           {isSyncing || isShowSyncStatus ? (
-            <article className='text-blue-400'>{syncStatusMessage}</article>
+            <article className='text-blue-400 dark:text-blue-100'>{syncStatusMessage}</article>
           ) : (
             <>
               {selectedFile && (
@@ -131,7 +131,7 @@ export default function WriteFeedModal({ boolean, handleCloseModal }: WFModalPro
                 <Icon icon='iconoir:post' style={{ fontSize: '150px' }} className='mb-16 mt-8' />
                 <article className='flex flex-row'>
                   <textarea
-                    className='h-[150px] w-[300px] resize-none overflow-hidden rounded-2xl border-0 bg-stone-50 p-4 text-center outline-none'
+                    className='h-[150px] w-[300px] resize-none overflow-hidden rounded-2xl border-0 bg-stone-50 p-4 text-center outline-none dark:bg-stone-700'
                     onChange={(ev) => setFeedCaption(ev.target.value)}
                     placeholder='감정을 공유하세요'
                   />
