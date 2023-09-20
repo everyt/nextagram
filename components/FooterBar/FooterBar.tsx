@@ -46,7 +46,7 @@ function FooterBar() {
 
   return (
     <>
-      {isLoading && (
+      {!isLoading && (
         <div className='flex flex-row'>
           {width >= 972 && (
             <div className='ml-4 flex flex-col lg:mr-[2vw] xl:mr-[7vw]'>

@@ -118,7 +118,7 @@ function FeedView() {
 
   return (
     <>
-      {initialLoading && (
+      {!initialLoading && (
         <div className='flex flex-col justify-start pb-10'>
           {feeds ? (
             feeds.map((feed, key) => (
