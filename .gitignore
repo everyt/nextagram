@@ -17,6 +17,8 @@
 .DS_Store
 *.pem
 
+.env.local
+
 # debug
 yarn-debug.log*
 yarn-error.log*
