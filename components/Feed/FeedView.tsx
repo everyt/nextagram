@@ -21,7 +21,7 @@ import FeedSkeleton from './FeedSkeleton';
 
 function FeedView() {
   const [feeds, setFeeds] = useState<any[]>([]);
-  const [initialLoading, setInitialLoading] = useState<boolean>(true);
+  const [initialLoadingDone, setInitialLoadingDone] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [lastTimestamp, setLastTimestamp] = useState<any>(null);
@@ -75,7 +75,7 @@ function FeedView() {
 
   useEffect(() => {
     setTimeout(() => {
-      setInitialLoading(false);
+      setInitialLoadingDone(true);
     }, 300);
     fetchFeeds(true); // 페이지가 처음 로드될 때 호출
   }, []);
@@ -117,7 +117,7 @@ function FeedView() {
 
   return (
     <div className='flex flex-col justify-start pb-10'>
-      {feeds && !initialLoading ? (
+      {feeds && initialLoadingDone ? (
         feeds.map((feed, key) => (
           <Feed
             key={key}
@@ -140,7 +140,7 @@ function FeedView() {
         </>
       )}
       {loading && <FeedSkeleton />}
-      {feeds && !initialLoading && !hasMore && <CheckedEverything />}
+      {feeds && initialLoadingDone && !hasMore && <CheckedEverything />}
       {hasMore && <div className='load-more-trigger' style={{ height: 40 }} />}
     </div>
   );

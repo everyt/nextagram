@@ -8,7 +8,7 @@ import Suggestion from '@/components/FooterBar/Suggestion';
 import Miniprofile from '@/components/Miniprofile/Miniprofile';
 
 function FooterBar() {
-  const [isloading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
   const { data: session } = useSession();
   const [width, setWidth] = useState<number>(1100);
 
@@ -37,14 +37,14 @@ function FooterBar() {
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
+      setIsLoadingDone(true);
     }, 300);
     handleWindowResize();
   }, []);
 
   return (
     <>
-      {isloading === false ? (
+      {isLoadingDone ? (
         <div className='flex flex-row'>
           {width >= 972 && (
             <div className='ml-4 flex flex-col lg:mr-[2vw] xl:mr-[7vw]'>
