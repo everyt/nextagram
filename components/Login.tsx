@@ -7,7 +7,7 @@ import { signIn, useSession } from 'next-auth/react';
 export default function Login() {
   const { data: session } = useSession();
   return (
-    <div className='mb-36 flex flex-col items-center border-2'>
+    <div className='top-1/3 mb-36 flex flex-col items-center border-2'>
       <div className='flex w-[300px] flex-col items-center'>
         <Image
           className='mt-8 h-[53px] w-[150px]'
