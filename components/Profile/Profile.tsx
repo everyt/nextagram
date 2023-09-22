@@ -101,7 +101,7 @@ export default function Profile({ id }: { id?: string }) {
             className='ml-20 mt-2'
           >
             <b>{id ? user?.data().name : session?.user.name}</b>
-            <p>{id ? user?.data().email : session?.user.email}</p>
+            <p>{id ? (user?.data().email ? user?.data().email : '@kakao') : session?.user.email}</p>
             {session?.user.id === user?.id ? (
               editMode ? (
                 <>
