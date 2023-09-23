@@ -7,8 +7,6 @@ import { useSession } from 'next-auth/react';
 import Suggestion from '@/components/FooterBar/Suggestion';
 import Miniprofile from '@/components/Miniprofile/Miniprofile';
 
-import LoadingScreen from '../LoadingScreen';
-
 function FooterBar() {
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -46,7 +44,6 @@ function FooterBar() {
 
   return (
     <>
-      {!isLoadingDone && <LoadingScreen />}
       {isLoadingDone ? (
         <div className='flex flex-row'>
           {width >= 972 && (
