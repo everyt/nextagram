@@ -155,8 +155,8 @@ function NavBar() {
                         />
                       ) : (
                         <Image
-                          className={`rounded-full ${highlight === key && 'border-2 border-black'}`}
-                          src={session?.user.image ? session?.user.image : '/img/unknown.png'}
+                          className={`rounded-full ${highlight === key && 'border-#444 border-2'}`}
+                          src={session ? session?.user.image : '/img/unknown.png'}
                           alt=''
                           width={30}
                           height={30}
