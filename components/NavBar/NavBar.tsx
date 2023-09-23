@@ -8,8 +8,6 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
-import { useSession } from 'next-auth/react';
-
 import useWindowSize from '@/hooks/useWindowSize';
 
 import DropDown from './DropDown';
@@ -17,7 +15,6 @@ import NavBarButton from './NavBarButton';
 import WriteFeedModal from './WriteFeedModal';
 
 function NavBar() {
-  const { data: session } = useSession();
   const pathname = usePathname();
 
   let windowSize = useWindowSize().width / 6; // 클라이언트가 로딩되기 전까지 로딩을 띄워줘야 하는데
@@ -148,20 +145,10 @@ function NavBar() {
                       onClick={onClick as string | (() => void)}
                       text={text as string}
                     >
-                      {(key as number) < 7 ? (
-                        <Icon
-                          icon={`${Icons[key as number][highlight === key ? 1 : 0]}`}
-                          style={{ fontSize: '30px' }}
-                        />
-                      ) : (
-                        <Image
-                          className={`rounded-full ${highlight === key && 'border-#444 border-2'}`}
-                          src={session ? session?.user.image : '/img/unknown.png'}
-                          alt=''
-                          width={30}
-                          height={30}
-                        />
-                      )}
+                      <Icon
+                        icon={`${Icons[key as number][highlight === key ? 1 : 0]}`}
+                        style={{ fontSize: '30px' }}
+                      />
                     </NavBarButton>
                   ))}
                 </article>
