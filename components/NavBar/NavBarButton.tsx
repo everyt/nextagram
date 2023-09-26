@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 import { memo } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 type Props = {
   type: 'normal' | 'dropdown';
@@ -37,11 +37,12 @@ function NavBarButton({
   onClick,
 }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleClick = () => {
     typeof onClick === 'string' ? router.push(onClick!) : onClick!();
     if (type === 'normal')
-      setHighlight!(!(typeof onClick === 'string') && index === highlight ? 0 : index!);
+      setHighlight!(!(typeof onClick === 'string') && index === highlight ? pathname === '/' ? 0 : 7 : index!);
   };
 
   return (
