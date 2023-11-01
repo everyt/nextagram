@@ -1,6 +1,7 @@
 <div align="center">
 
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Instagram-Icon.png" alt="logo" width="200" height="auto" />
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Instagram-Icon.png" alt="logo" width="160" height="auto" /><br>
+
   
   ![](public/svg/readme/N.svg?raw=true)
   ![](public/svg/readme/e.svg?raw=true)
