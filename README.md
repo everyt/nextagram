@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://github.com/everyt/nextagram/assets/80094147/f90baa6f-5506-48b0-aab9-5958961c3f16.png" alt="logo" width="200" height="auto" />
+  <img src="https://en.m.wikipedia.org/wiki/File:Instagram-Icon.png" alt="logo" width="200" height="auto" />
   
   ![](public/images/readme/N.svg?raw=true)
   ![](public/images/readme/e.svg?raw=true)
