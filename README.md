@@ -2,12 +2,12 @@
 
   <img src="https://upload.wikimedia.org/wikipedia/commons/5/58/Instagram-Icon.png" alt="logo" width="200" height="auto" />
   
-  ![](public/images/readme/N.svg?raw=true)
-  ![](public/images/readme/e.svg?raw=true)
-  ![](public/images/readme/x.svg?raw=true)
-  ![](public/images/readme/t.svg?raw=true)
-  ![](public/images/readme/Blank.svg?raw=true)
-  ![](public/images/readme/Instagram.svg?raw=true)
+  ![](public/svg/readme/N.svg?raw=true)
+  ![](public/svg/readme/e.svg?raw=true)
+  ![](public/svg/readme/x.svg?raw=true)
+  ![](public/svg/readme/t.svg?raw=true)
+  ![](public/svg/readme/Blank.svg?raw=true)
+  ![](public/svg/readme/Instagram.svg?raw=true)
   <br>Clone Project
     
   <!-- Badges -->
